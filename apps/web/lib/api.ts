@@ -3,10 +3,15 @@ function trimTrailingSlash(value: string) {
 }
 
 export function getAdminApiBaseUrl() {
+  const productionFallback =
+    process.env.VERCEL_ENV === "production"
+      ? "https://pet-showcase-admin.vercel.app"
+      : "http://127.0.0.1:3001";
+
   return trimTrailingSlash(
     process.env.ADMIN_API_BASE_URL ??
       process.env.NEXT_PUBLIC_API_BASE_URL ??
-      "http://127.0.0.1:3001"
+      productionFallback
   );
 }
 
