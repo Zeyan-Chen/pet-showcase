@@ -30,13 +30,13 @@ export function ImageUpload({
       });
 
       if (!response.ok) {
-        throw new Error("Upload failed");
+        throw new Error("UPLOAD_FAILED");
       }
 
       const data = (await response.json()) as { imageUrl: string };
       onChange(data.imageUrl);
     } catch {
-      setError("Image upload failed. Please try again.");
+      setError("圖片上傳失敗，請稍後再試。");
     } finally {
       setIsUploading(false);
     }
@@ -49,9 +49,9 @@ export function ImageUpload({
         accept="image/*"
         onChange={(event) => handleFileChange(event.target.files?.[0] ?? null)}
       />
-      {isUploading ? <p className="text-sm text-stone-600">Uploading...</p> : null}
+      {isUploading ? <p className="text-sm text-stone-600">圖片上傳中...</p> : null}
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
-      {value ? <img src={value} alt="Preview" className="h-48 w-full rounded-3xl object-cover" /> : null}
+      {value ? <img src={value} alt="圖片預覽" className="h-48 w-full rounded-3xl object-cover" /> : null}
     </div>
   );
 }

@@ -6,7 +6,7 @@ export async function POST(request: Request) {
   try {
     await requireAdmin();
   } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ message: "未授權" }, { status: 401 });
   }
 
   const formData = await request.formData();

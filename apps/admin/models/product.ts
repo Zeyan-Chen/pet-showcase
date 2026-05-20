@@ -11,6 +11,11 @@ const productSchema = new Schema(
       enum: ["draft", "published"],
       required: true,
       default: "draft"
+    },
+    categoryId: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+      required: true
     }
   },
   {

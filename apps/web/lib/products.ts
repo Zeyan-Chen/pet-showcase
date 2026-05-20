@@ -1,7 +1,7 @@
 import type { ProductRecord } from "@pet-showcase/shared";
 import { apiBaseUrl } from "./api";
 
-export async function getPublishedProducts(): Promise<ProductRecord[]> {
+export async function getPublishedProducts(categorySlug?: string): Promise<ProductRecord[]> {
   try {
     const response = await fetch(`${apiBaseUrl}/api/products?status=published`, {
       cache: "no-store"
@@ -11,7 +11,13 @@ export async function getPublishedProducts(): Promise<ProductRecord[]> {
       return [];
     }
 
-    return (await response.json()) as ProductRecord[];
+    const products = (await response.json()) as ProductRecord[];
+
+    if (!categorySlug) {
+      return products;
+    }
+
+    return products.filter((product) => product.category?.slug === categorySlug);
   } catch {
     return [];
   }

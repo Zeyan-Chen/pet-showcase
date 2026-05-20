@@ -8,7 +8,7 @@ export async function GET(_: NextRequest, context: { params: Promise<{ id: strin
   const product = await getPublishedProductById(id);
 
   if (!product) {
-    return NextResponse.json({ message: "Not found" }, { status: 404 });
+    return NextResponse.json({ message: "找不到商品" }, { status: 404 });
   }
 
   return NextResponse.json(product);
@@ -19,13 +19,13 @@ export async function POST(request: NextRequest, context: { params: Promise<{ id
   const method = String(formData.get("_method") ?? "").toLowerCase();
 
   if (method !== "delete") {
-    return NextResponse.json({ message: "Method not allowed" }, { status: 405 });
+    return NextResponse.json({ message: "不支援的請求方法" }, { status: 405 });
   }
 
   try {
     await requireAdmin();
   } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ message: "未授權" }, { status: 401 });
   }
 
   const { id } = await context.params;
@@ -37,26 +37,34 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
   try {
     await requireAdmin();
   } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ message: "未授權" }, { status: 401 });
   }
 
-  const json = await request.json();
-  const input = productInputSchema.parse(json);
   const { id } = await context.params;
-  const product = await updateProduct(id, input);
 
-  if (!product) {
-    return NextResponse.json({ message: "Not found" }, { status: 404 });
+  try {
+    const input = productInputSchema.parse(await request.json());
+    const product = await updateProduct(id, input);
+
+    if (!product) {
+      return NextResponse.json({ message: "找不到商品" }, { status: 404 });
+    }
+
+    return NextResponse.json(product);
+  } catch (error) {
+    if (error instanceof Error && error.message === "CATEGORY_NOT_FOUND") {
+      return NextResponse.json({ message: "找不到指定分類" }, { status: 400 });
+    }
+
+    throw error;
   }
-
-  return NextResponse.json(product);
 }
 
 export async function DELETE(_: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     await requireAdmin();
   } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ message: "未授權" }, { status: 401 });
   }
 
   const { id } = await context.params;

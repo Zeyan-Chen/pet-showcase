@@ -13,11 +13,18 @@ export async function POST(request: NextRequest) {
   try {
     await requireAdmin();
   } catch {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ message: "未授權" }, { status: 401 });
   }
 
-  const json = await request.json();
-  const input = productInputSchema.parse(json);
-  const product = await createProduct(input);
-  return NextResponse.json(product, { status: 201 });
+  try {
+    const input = productInputSchema.parse(await request.json());
+    const product = await createProduct(input);
+    return NextResponse.json(product, { status: 201 });
+  } catch (error) {
+    if (error instanceof Error && error.message === "CATEGORY_NOT_FOUND") {
+      return NextResponse.json({ message: "找不到指定分類" }, { status: 400 });
+    }
+
+    throw error;
+  }
 }
