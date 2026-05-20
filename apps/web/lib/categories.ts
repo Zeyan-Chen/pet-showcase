@@ -1,11 +1,9 @@
 import type { CategoryRecord } from "@pet-showcase/shared";
-import { getAdminApiBaseUrl } from "./api";
+import { fetchFromAdmin } from "./api";
 
 export async function getCategories(): Promise<CategoryRecord[]> {
   try {
-    const response = await fetch(`${getAdminApiBaseUrl()}/api/categories`, {
-      cache: "no-store"
-    });
+    const response = await fetchFromAdmin("/api/categories");
 
     if (!response.ok) {
       return [];

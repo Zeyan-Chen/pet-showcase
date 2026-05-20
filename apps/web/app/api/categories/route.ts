@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
-import { getAdminApiBaseUrl } from "../../../lib/api";
+import { fetchFromAdmin } from "../../../lib/api";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const response = await fetch(`${getAdminApiBaseUrl()}/api/categories`, {
-      cache: "no-store"
-    });
+    const response = await fetchFromAdmin("/api/categories");
     const text = await response.text();
 
     return new NextResponse(text, {

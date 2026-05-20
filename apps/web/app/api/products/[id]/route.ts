@@ -1,14 +1,12 @@
 import { NextResponse } from "next/server";
-import { getAdminApiBaseUrl } from "../../../../lib/api";
+import { fetchFromAdmin } from "../../../../lib/api";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(_: Request, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
-    const response = await fetch(`${getAdminApiBaseUrl()}/api/products/${id}`, {
-      cache: "no-store"
-    });
+    const response = await fetchFromAdmin(`/api/products/${id}`);
     const text = await response.text();
 
     return new NextResponse(text, {
