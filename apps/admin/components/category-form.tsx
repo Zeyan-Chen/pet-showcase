@@ -27,7 +27,7 @@ export function CategoryForm({ categoryCount }: { categoryCount: number }) {
     setIsSubmitting(false);
 
     if (!response.ok) {
-      setError("無法建立分類，請嘗試其他名稱或稍後再試。");
+      setError("新增分類失敗，請檢查名稱是否重複後再試一次。");
       return;
     }
 
@@ -42,18 +42,18 @@ export function CategoryForm({ categoryCount }: { categoryCount: number }) {
       <div className="space-y-4">
         <div className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-bark/70">
-            分類設定
+            分類表單
           </p>
-          <h2 className="text-2xl font-semibold text-stone-950">新增品種類別</h2>
+          <h2 className="text-2xl font-semibold text-stone-950">新增守宮品種</h2>
           <p className="text-sm leading-6 text-stone-600">
-            分類會用在商品歸類與前台導覽。名稱建議保持精簡，方便瀏覽與篩選。
+            新增之後，這個分類會出現在商品表單與前台分類導覽中，方便你按守宮品種整理展示內容。
           </p>
         </div>
 
         <div className="rounded-[1.5rem] border border-stone-200 bg-stone-50/90 px-4 py-3 text-sm text-stone-600">
           {categoryCount === 0
-            ? "目前還沒有分類，先建立第一個分類後再發布新商品。"
-            : `目前後台已有 ${categoryCount} 個分類。`}
+            ? "目前還沒有任何分類，先新增第一個守宮品種吧。"
+            : `目前已建立 ${categoryCount} 個分類。`}
         </div>
 
         <form action={handleSubmit} className="space-y-3">
@@ -69,7 +69,7 @@ export function CategoryForm({ categoryCount }: { categoryCount: number }) {
               name="name"
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="Leachianus"
+              placeholder="例如：睫角守宮"
               maxLength={80}
               required
             />
@@ -78,7 +78,7 @@ export function CategoryForm({ categoryCount }: { categoryCount: number }) {
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
           <Button type="submit" disabled={isSubmitting || !name.trim()} className="w-full">
-            {isSubmitting ? "建立中..." : "建立分類"}
+            {isSubmitting ? "新增中..." : "新增分類"}
           </Button>
         </form>
       </div>

@@ -42,7 +42,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
     setPendingId(null);
 
     if (!response.ok) {
-      setError(getErrorMessage("無法重新命名分類，請稍後再試。", payload));
+      setError(getErrorMessage("更新分類失敗，請稍後再試。", payload));
       return;
     }
 
@@ -54,7 +54,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
   }
 
   async function handleDelete(id: string, name: string) {
-    const confirmed = window.confirm(`要刪除「${name}」嗎？請先重新分配使用此分類的商品。`);
+    const confirmed = window.confirm(`確定要刪除「${name}」嗎？刪除後無法復原。`);
 
     if (!confirmed) {
       return;
@@ -71,7 +71,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
     setPendingId(null);
 
     if (!response.ok) {
-      setError(getErrorMessage("無法刪除分類，請稍後再試。", payload));
+      setError(getErrorMessage("刪除分類失敗，請稍後再試。", payload));
       return;
     }
 
@@ -88,9 +88,9 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
   if (categories.length === 0) {
     return (
       <Card className="border border-dashed border-stone-300 bg-white/70 p-8 text-center shadow-none">
-        <p className="text-base font-semibold text-stone-900">目前沒有分類</p>
+        <p className="text-base font-semibold text-stone-900">目前沒有任何分類</p>
         <p className="mt-2 text-sm leading-6 text-stone-600">
-          先建立第一個分類，之後就能把商品分配到真正的前台分類中。
+          先建立守宮品種分類，之後新增商品時就能直接指定所屬品種。
         </p>
       </Card>
     );
@@ -116,7 +116,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div className="min-w-0 space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">
-                  前台分類
+                  品種分類
                 </p>
                 {isEditing ? (
                   <div className="space-y-3">
@@ -150,7 +150,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
                 ) : (
                   <>
                     <h3 className="truncate text-lg font-semibold text-stone-950">{category.name}</h3>
-                    <p className="text-sm text-stone-600">代稱：{category.slug}</p>
+                    <p className="text-sm text-stone-600">Slug：{category.slug}</p>
                   </>
                 )}
               </div>

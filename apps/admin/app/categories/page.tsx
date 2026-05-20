@@ -15,7 +15,7 @@ export default async function CategoriesPage() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-3">
             <p className="text-sm font-medium uppercase tracking-[0.24em] text-bark/70">
-              後台導覽
+              分類管理
             </p>
             <div className="flex flex-wrap gap-2">
               <Link
@@ -31,9 +31,9 @@ export default async function CategoriesPage() {
           </div>
 
           <div className="space-y-2 lg:max-w-xl lg:text-right">
-            <h1 className="text-3xl font-bold text-stone-950">分類管理</h1>
+            <h1 className="text-3xl font-bold text-stone-950">守宮品種分類</h1>
             <p className="text-sm leading-6 text-stone-600">
-              你可以新增、重新命名或停用前台分類，同時維持商品歸類的可控性。
+              在這裡維護前台會顯示的守宮品種分類。你可以新增、重新命名，或刪除未被商品使用的分類。
             </p>
           </div>
         </div>
@@ -49,7 +49,7 @@ export default async function CategoriesPage() {
                 目前分類
               </p>
               <h2 className="text-xl font-semibold text-stone-950">
-                共有 {categories.length} 個前台分類
+                目前有 {categories.length} 個守宮品種分類
               </h2>
             </div>
 

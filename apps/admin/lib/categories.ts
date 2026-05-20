@@ -12,12 +12,58 @@ type RawCategory = {
   updatedAt: Date;
 };
 
+export class CategoryNameConflictError extends Error {
+  constructor() {
+    super("CATEGORY_NAME_CONFLICT");
+    this.name = "CategoryNameConflictError";
+  }
+}
+
+export function normalizeCategoryName(name: string) {
+  return name.normalize("NFKC").trim();
+}
+
 export function slugifyCategoryName(name: string) {
-  return name
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
+  const normalizedName = normalizeCategoryName(name).toLowerCase();
+  const slug = normalizedName
+    .replace(/[\s_]+/g, "-")
+    .replace(/[^\p{Letter}\p{Number}-]+/gu, "")
+    .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
+
+  return slug || `category-${Date.now().toString(36)}`;
+}
+
+async function resolveUniqueCategorySlug(name: string, excludeId?: string) {
+  const baseSlug = slugifyCategoryName(name);
+  let slug = baseSlug;
+  let suffix = 2;
+
+  while (true) {
+    const existingCategory = await CategoryModel.findOne({ slug }).select("_id").lean<{
+      _id: Types.ObjectId | string;
+    } | null>();
+
+    if (!existingCategory || existingCategory._id.toString() === excludeId) {
+      return slug;
+    }
+
+    slug = `${baseSlug}-${suffix}`;
+    suffix += 1;
+  }
+}
+
+async function assertCategoryNameAvailable(name: string, excludeId?: string) {
+  const normalizedName = normalizeCategoryName(name);
+  const existingCategory = await CategoryModel.findOne({ name: normalizedName }).select("_id").lean<{
+    _id: Types.ObjectId | string;
+  } | null>();
+
+  if (existingCategory && existingCategory._id.toString() !== excludeId) {
+    throw new CategoryNameConflictError();
+  }
+
+  return normalizedName;
 }
 
 export function serializeCategory(category: RawCategory): CategoryRecord {
@@ -48,9 +94,11 @@ export async function getCategoryById(id: string) {
 
 export async function createCategory(input: CategoryInput) {
   await connectToDatabase();
+  const name = await assertCategoryNameAvailable(input.name);
+  const slug = await resolveUniqueCategorySlug(name);
   const category = await CategoryModel.create({
-    name: input.name,
-    slug: slugifyCategoryName(input.name)
+    name,
+    slug
   });
   return serializeCategory(category.toObject());
 }
@@ -61,11 +109,13 @@ export async function updateCategory(id: string, input: CategoryInput) {
   }
 
   await connectToDatabase();
+  const name = await assertCategoryNameAvailable(input.name, id);
+  const slug = await resolveUniqueCategorySlug(name, id);
   const category = await CategoryModel.findByIdAndUpdate(
     id,
     {
-      name: input.name,
-      slug: slugifyCategoryName(input.name)
+      name,
+      slug
     },
     {
       new: true
