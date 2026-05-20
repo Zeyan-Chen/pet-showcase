@@ -1,9 +1,9 @@
 import type { ProductRecord } from "@pet-showcase/shared";
-import { apiBaseUrl } from "./api";
+import { getAdminApiBaseUrl } from "./api";
 
 export async function getPublishedProducts(categorySlug?: string): Promise<ProductRecord[]> {
   try {
-    const response = await fetch(`${apiBaseUrl}/api/products?status=published`, {
+    const response = await fetch(`${getAdminApiBaseUrl()}/api/products?status=published`, {
       cache: "no-store"
     });
 
@@ -25,7 +25,7 @@ export async function getPublishedProducts(categorySlug?: string): Promise<Produ
 
 export async function getPublishedProductById(id: string): Promise<ProductRecord | null> {
   try {
-    const response = await fetch(`${apiBaseUrl}/api/products/${id}`, {
+    const response = await fetch(`${getAdminApiBaseUrl()}/api/products/${id}`, {
       cache: "no-store"
     });
 
