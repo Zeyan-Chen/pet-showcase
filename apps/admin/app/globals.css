@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --admin-bg: #10263f;
+  --admin-bg-soft: #17385d;
+  --admin-surface: #f4efe6;
+  --admin-surface-2: #ebe2d4;
+  --admin-card: #fffaf3;
+  --admin-border: #d8cdbf;
+  --admin-ink: #221d19;
+  --admin-muted: #746b63;
+  --admin-brand: #214b7a;
+  --admin-brand-strong: #17385d;
+  --admin-accent: #cf8f44;
+}
+
+html {
+  background: var(--admin-bg);
+}
+
 body {
-  font-family: ui-sans-serif, system-ui, sans-serif;
+  min-height: 100vh;
+  font-family: "Segoe UI Variable Text", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  color: var(--admin-ink);
+  background:
+    radial-gradient(circle at top center, rgba(255, 255, 255, 0.1), transparent 24%),
+    linear-gradient(180deg, #17385d 0%, #10263f 16%, #efe7da 16%, #e8dfd0 100%);
 }

@@ -17,9 +17,9 @@ export function ProductCard({
   return (
     <Link
       href={`/products/${product._id}`}
-      className="group mb-4 block break-inside-avoid overflow-hidden rounded-[1.75rem] border border-black/10 bg-[var(--store-card)] shadow-[0_22px_50px_rgba(15,13,10,0.12)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_55px_rgba(15,13,10,0.18)] md:mb-0"
+      className="group mb-4 block break-inside-avoid overflow-hidden rounded-[1.75rem] border border-[#ddd3c6] bg-[#fffdfa] shadow-[0_18px_46px_rgba(16,38,63,0.1)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_56px_rgba(16,38,63,0.16)] md:mb-0"
     >
-      <div className={`relative ${imageClass} overflow-hidden bg-stone-200`}>
+      <div className={`relative ${imageClass} overflow-hidden bg-[#ddd3c5]`}>
         <Image
           src={product.imageUrl}
           alt={product.name}
@@ -27,14 +27,14 @@ export function ProductCard({
           className="object-cover transition duration-500 group-hover:scale-[1.04]"
         />
       </div>
-      <div className="space-y-2 px-4 py-4">
-        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-stone-500">
+      <div className="space-y-2 border-t border-[#ebe2d6] px-4 py-4 text-[var(--store-ink)]">
+        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-[#73695f]">
           {product.category.name}
         </p>
-        <h2 className="text-base font-semibold leading-snug text-stone-950 md:text-lg">
+        <h2 className="text-base font-semibold leading-snug text-[#1f1a17] md:text-lg">
           {product.name}
         </h2>
-        <p className="text-sm font-semibold text-stone-700">
+        <p className="text-sm font-semibold text-[#214b7a]">
           NT$ {currencyFormatter.format(product.price)}
         </p>
       </div>

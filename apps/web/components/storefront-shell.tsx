@@ -1,19 +1,30 @@
 import type { ReactNode } from "react";
+import { getActiveAnnouncements } from "../lib/announcements";
 import { AnnouncementBar } from "./announcement-bar";
 
 type StorefrontShellProps = {
-  hero: ReactNode;
+  categoryNav?: ReactNode;
   children: ReactNode;
 };
 
-export function StorefrontShell({ hero, children }: StorefrontShellProps) {
+export async function StorefrontShell({ categoryNav, children }: StorefrontShellProps) {
+  const announcements = await getActiveAnnouncements();
+
   return (
     <div className="min-h-screen bg-[var(--store-bg)] text-[var(--store-text)]">
-      <AnnouncementBar />
-      <header className="relative overflow-hidden border-b border-white/10 bg-[var(--store-panel)]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(214,165,93,0.18),transparent_32%),radial-gradient(circle_at_85%_15%,rgba(255,255,255,0.09),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.03),transparent_70%)]" />
-        <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
-          {hero}
+      <AnnouncementBar announcements={announcements} />
+      <header className="border-b border-[#d4c7b7]/80 bg-[rgba(244,239,230,0.98)] text-[var(--store-ink)] shadow-[0_16px_40px_rgba(16,38,63,0.16)]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between gap-4 py-4 sm:py-5">
+            <div className="flex items-center gap-4">
+              <div className="flex h-16 w-32 items-center justify-center rounded-[1.25rem] border border-[#d8cdbf] bg-[#fffdfa] text-center text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-[#7f766e] shadow-[0_16px_24px_rgba(16,38,63,0.07)] sm:h-20 sm:w-40">
+                Logo
+              </div>
+            </div>
+          </div>
+          {categoryNav ? (
+            <div className="border-t border-[#ddd2c4] py-3">{categoryNav}</div>
+          ) : null}
         </div>
       </header>
       <div className="relative">{children}</div>
