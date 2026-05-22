@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { getActiveAnnouncements } from "../lib/announcements";
 import { getSiteSettings } from "../lib/site-settings";
 import { AnnouncementBar } from "./announcement-bar";
@@ -26,7 +27,11 @@ export async function StorefrontShell({
           <div className="store-header-brand-row py-4 sm:py-5">
             <div className="store-header-brand-slot">
               {siteSettings ? (
-                <div className="store-header-logo-frame">
+                <Link
+                  href="/"
+                  aria-label="回到首頁"
+                  className="store-header-logo-frame"
+                >
                   <Image
                     src={siteSettings.logoImageUrl}
                     alt={siteSettings.logoAlt}
@@ -35,9 +40,15 @@ export async function StorefrontShell({
                     priority
                     className="store-header-logo-image"
                   />
-                </div>
+                </Link>
               ) : (
-                <div className="store-header-logo-placeholder">Logo</div>
+                <Link
+                  href="/"
+                  aria-label="回到首頁"
+                  className="store-header-logo-placeholder"
+                >
+                  Logo
+                </Link>
               )}
             </div>
           </div>
