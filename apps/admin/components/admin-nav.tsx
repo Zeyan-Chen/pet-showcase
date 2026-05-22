@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 const items = [
   { href: "/products", label: "商品" },
   { href: "/categories", label: "分類" },
-  { href: "/announcements", label: "公告" }
+  { href: "/announcements", label: "公告" },
 ];
 
 export function AdminNav() {
@@ -17,25 +17,36 @@ export function AdminNav() {
   }
 
   return (
-    <div className="border-b border-[#22496f] bg-[rgba(16,38,63,0.98)] text-white shadow-[0_18px_40px_rgba(16,38,63,0.26)]">
-      <div className="mx-auto flex w-full max-w-6xl gap-2 overflow-x-auto px-4 py-4">
-        {items.map((item) => {
-          const isActive = pathname.startsWith(item.href);
+    <div className="border-b border-[var(--admin-border)] bg-[rgba(255,253,249,0.98)] text-[var(--admin-ink)] shadow-[0_14px_40px_rgba(76,57,35,0.08)] backdrop-blur">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4">
+        <div className="space-y-1">
+          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-[var(--admin-muted)]">
+            Gecko Admin
+          </p>
+          <p className="text-lg font-semibold text-[var(--admin-brand-strong)]">
+            守宮後台管理
+          </p>
+        </div>
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`inline-flex min-h-11 items-center rounded-3xl px-4 py-3 text-sm font-semibold transition ${
-                isActive
-                  ? "bg-[#f4efe6] text-[#17385d] shadow-[0_10px_24px_rgba(0,0,0,0.18)]"
-                  : "border border-white/18 text-white/88 hover:border-[#cf8f44] hover:text-[#ffd7a7]"
-              }`}
-            >
-              {item.label}
-            </Link>
-          );
-        })}
+        <div className="flex gap-2 overflow-x-auto">
+          {items.map((item) => {
+            const isActive = pathname.startsWith(item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`inline-flex min-h-11 items-center rounded-full px-4 py-3 text-sm font-semibold transition ${
+                  isActive
+                    ? "border border-[var(--admin-border-strong)] bg-[var(--admin-surface)] text-[var(--admin-brand-strong)]"
+                    : "border border-transparent bg-[var(--admin-brand-soft)]/72 text-[var(--admin-muted)] hover:border-[var(--admin-border)] hover:bg-[var(--admin-surface)] hover:text-[var(--admin-brand-strong)]"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

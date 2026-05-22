@@ -17,7 +17,7 @@ export function ProductCard({
   return (
     <Link
       href={`/products/${product._id}`}
-      className="group mb-4 block break-inside-avoid overflow-hidden rounded-[1.75rem] border border-[#ddd3c6] bg-[#fffdfa] shadow-[0_18px_46px_rgba(16,38,63,0.1)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_56px_rgba(16,38,63,0.16)] md:mb-0"
+      className="group block overflow-hidden rounded-[1.75rem] border border-[#ddd3c6] bg-[#fffdfa] shadow-[0_18px_46px_rgba(16,38,63,0.1)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_56px_rgba(16,38,63,0.16)]"
     >
       <div className={`relative ${imageClass} overflow-hidden bg-[#ddd3c5]`}>
         <Image

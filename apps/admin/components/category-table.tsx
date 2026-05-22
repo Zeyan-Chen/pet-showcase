@@ -42,7 +42,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
     setPendingId(null);
 
     if (!response.ok) {
-      setError(getErrorMessage("更新分類失敗，請稍後再試。", payload));
+      setError(getErrorMessage("更新分類失敗，請再試一次。", payload));
       return;
     }
 
@@ -54,7 +54,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
   }
 
   async function handleDelete(id: string, name: string) {
-    const confirmed = window.confirm(`確定要刪除「${name}」嗎？刪除後無法復原。`);
+    const confirmed = window.confirm(`確定要刪除分類「${name}」嗎？刪除後無法復原。`);
 
     if (!confirmed) {
       return;
@@ -71,7 +71,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
     setPendingId(null);
 
     if (!response.ok) {
-      setError(getErrorMessage("刪除分類失敗，請稍後再試。", payload));
+      setError(getErrorMessage("刪除分類失敗，請再試一次。", payload));
       return;
     }
 
@@ -87,10 +87,10 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
 
   if (categories.length === 0) {
     return (
-      <Card className="border border-dashed border-stone-300 bg-white/70 p-8 text-center shadow-none">
-        <p className="text-base font-semibold text-stone-900">目前沒有任何分類</p>
-        <p className="mt-2 text-sm leading-6 text-stone-600">
-          先建立守宮品種分類，之後新增商品時就能直接指定所屬品種。
+      <Card className="border border-dashed border-[var(--admin-border)] bg-[var(--admin-card)] p-8 text-center shadow-none">
+        <p className="text-base font-semibold text-[var(--admin-ink)]">目前沒有分類</p>
+        <p className="mt-2 text-sm leading-6 text-[var(--admin-muted)]">
+          先建立品種分類，之後新增商品時才可以從下拉選單中選取。
         </p>
       </Card>
     );
@@ -111,12 +111,12 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
         return (
           <Card
             key={category._id}
-            className="border border-stone-200/70 bg-white/95 p-4 shadow-[0_18px_50px_-36px_rgba(52,34,18,0.55)]"
+            className="border border-[var(--admin-border)] bg-[var(--admin-card)] p-4 shadow-[0_18px_50px_-36px_rgba(76,57,35,0.14)]"
           >
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div className="min-w-0 space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">
-                  品種分類
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--admin-muted)]">
+                  商品分類
                 </p>
                 {isEditing ? (
                   <div className="space-y-3">
@@ -131,12 +131,13 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
                         type="button"
                         disabled={isPending || !draftName.trim()}
                         onClick={() => handleRename(category._id)}
+                        className="bg-[var(--admin-ink)] text-white hover:bg-[var(--admin-brand-strong)]"
                       >
                         {isPending ? "儲存中..." : "儲存名稱"}
                       </Button>
                       <button
                         type="button"
-                        className="min-h-11 rounded-3xl border border-stone-300 px-4 py-3 text-sm font-semibold text-stone-700 transition hover:border-stone-400"
+                        className="min-h-11 rounded-full border border-[var(--admin-border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--admin-muted)] transition hover:border-[var(--admin-border-strong)] hover:text-[var(--admin-brand-strong)]"
                         onClick={() => {
                           setEditingId(null);
                           setDraftName("");
@@ -149,8 +150,10 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
                   </div>
                 ) : (
                   <>
-                    <h3 className="truncate text-lg font-semibold text-stone-950">{category.name}</h3>
-                    <p className="text-sm text-stone-600">Slug：{category.slug}</p>
+                    <h3 className="truncate text-lg font-semibold text-[var(--admin-ink)]">
+                      {category.name}
+                    </h3>
+                    <p className="text-sm text-[var(--admin-muted)]">Slug：{category.slug}</p>
                   </>
                 )}
               </div>
@@ -159,7 +162,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
                 <div className="flex flex-wrap gap-2 md:justify-end">
                   <button
                     type="button"
-                    className="min-h-11 rounded-3xl border border-stone-300 px-4 py-3 text-sm font-semibold text-stone-700 transition hover:border-bark hover:text-bark"
+                    className="min-h-11 rounded-full border border-[var(--admin-border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--admin-brand-strong)] transition hover:border-[var(--admin-border-strong)]"
                     onClick={() => {
                       setEditingId(category._id);
                       setDraftName(category.name);
@@ -170,7 +173,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
                   </button>
                   <Button
                     type="button"
-                    className="bg-red-700"
+                    className="bg-[#8e4b45] text-white hover:bg-[#7b3e39]"
                     disabled={isPending}
                     onClick={() => handleDelete(category._id, category.name)}
                   >

@@ -41,12 +41,12 @@ a {
 .announcement-viewport {
   position: relative;
   min-height: 1.4rem;
+  overflow: hidden;
 }
 
 .announcement-text {
   align-items: center;
   display: flex;
-  inset: 0;
   justify-content: center;
   position: absolute;
   padding-inline: 0.5rem;
@@ -56,30 +56,37 @@ a {
 }
 
 .announcement-text.is-static {
+  inset: 0;
   position: relative;
 }
 
 .announcement-text.is-marquee {
   animation: announcement-marquee 4600ms both;
+  left: 100%;
+  max-width: none;
+  min-width: max-content;
+  top: 0;
+  white-space: nowrap;
+  will-change: transform;
 }
 
 @keyframes announcement-marquee {
   from {
-    transform: translateX(72%);
+    transform: translateX(0);
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   18% {
-    transform: translateX(0);
+    transform: translateX(var(--announcement-center-offset, -50%));
   }
 
   76% {
-    transform: translateX(0);
+    transform: translateX(var(--announcement-center-offset, -50%));
     animation-timing-function: cubic-bezier(0.55, 0, 0.25, 1);
   }
 
   to {
-    transform: translateX(-72%);
+    transform: translateX(var(--announcement-exit-offset, -100%));
   }
 }
 

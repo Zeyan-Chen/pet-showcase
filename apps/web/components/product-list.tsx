@@ -14,7 +14,7 @@ export function ProductList({ products }: { products: ProductRecord[] }) {
       </section>
       <section
         aria-label="Mobile catalog"
-        className="columns-2 gap-3 md:hidden [column-fill:_balance]"
+        className="grid grid-cols-2 items-start gap-3 md:hidden"
       >
         {products.map((product, index) => (
           <ProductCard key={product._id} product={product} index={index} />

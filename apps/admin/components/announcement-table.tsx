@@ -44,7 +44,7 @@ export function AnnouncementTable({ announcements }: { announcements: Announceme
     setPendingId(null);
 
     if (!response.ok) {
-      setError(getErrorMessage("更新公告失敗，請稍後再試。", payload));
+      setError(getErrorMessage("更新公告失敗，請再試一次。", payload));
       return;
     }
 
@@ -75,7 +75,7 @@ export function AnnouncementTable({ announcements }: { announcements: Announceme
     setPendingId(null);
 
     if (!response.ok) {
-      setError(getErrorMessage("切換公告狀態失敗，請稍後再試。", payload));
+      setError(getErrorMessage("切換公告狀態失敗，請再試一次。", payload));
       return;
     }
 
@@ -102,7 +102,7 @@ export function AnnouncementTable({ announcements }: { announcements: Announceme
     setPendingId(null);
 
     if (!response.ok) {
-      setError(getErrorMessage("刪除公告失敗，請稍後再試。", payload));
+      setError(getErrorMessage("刪除公告失敗，請再試一次。", payload));
       return;
     }
 
@@ -119,10 +119,10 @@ export function AnnouncementTable({ announcements }: { announcements: Announceme
 
   if (announcements.length === 0) {
     return (
-      <Card className="border border-dashed border-[#d4c7b7] bg-[#fffaf3] p-8 text-center shadow-none">
-        <p className="text-base font-semibold text-[#1f1a17]">目前還沒有公告</p>
-        <p className="mt-2 text-sm leading-6 text-[#605850]">
-          先新增一則公告後，前台上方藍色細條就會開始顯示。
+      <Card className="border border-dashed border-[var(--admin-border)] bg-[var(--admin-card)] p-8 text-center shadow-none">
+        <p className="text-base font-semibold text-[var(--admin-ink)]">目前還沒有公告</p>
+        <p className="mt-2 text-sm leading-6 text-[var(--admin-muted)]">
+          先新增一則公告，前台頂部藍色細條就會開始顯示。
         </p>
       </Card>
     );
@@ -143,21 +143,21 @@ export function AnnouncementTable({ announcements }: { announcements: Announceme
         return (
           <Card
             key={announcement._id}
-            className="border border-[#d8cdbf] bg-[#fffaf3] p-4 shadow-[0_18px_50px_-36px_rgba(16,38,63,0.24)]"
+            className="border border-[var(--admin-border)] bg-[var(--admin-card)] p-4 shadow-[0_18px_50px_-36px_rgba(76,57,35,0.14)]"
           >
             <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-2">
                 <span
-                  className={`rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] ${
+                  className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-[0.18em] ${
                     announcement.isActive
-                      ? "bg-[#dbe8f6] text-[#214b7a]"
+                      ? "bg-[var(--admin-brand-soft)] text-[var(--admin-brand-strong)]"
                       : "bg-stone-200 text-stone-600"
                   }`}
                 >
                   {announcement.isActive ? "啟用中" : "已停用"}
                 </span>
-                <span className="text-xs text-[#746b63]">
-                  建立於 {new Date(announcement.createdAt).toLocaleString("zh-TW")}
+                <span className="text-xs text-[var(--admin-muted)]">
+                  建立時間：{new Date(announcement.createdAt).toLocaleString("zh-TW")}
                 </span>
               </div>
 
@@ -167,30 +167,30 @@ export function AnnouncementTable({ announcements }: { announcements: Announceme
                     value={draftMessage}
                     onChange={(event) => setDraftMessage(event.target.value)}
                     maxLength={160}
-                    className="min-h-28 border-[#d4c7b7] bg-white"
+                    className="min-h-28 border-[var(--admin-border)] bg-white"
                     autoFocus
                   />
-                  <label className="flex items-center gap-3 rounded-[1.25rem] border border-[#ddd1c1] bg-[#f7f1e8] px-4 py-3 text-sm text-[#3d352f]">
+                  <label className="flex items-center gap-3 rounded-[1.25rem] border border-[var(--admin-border)] bg-[var(--admin-surface-2)] px-4 py-3 text-sm text-[var(--admin-brand-strong)]">
                     <input
                       type="checkbox"
                       checked={draftIsActive}
                       onChange={(event) => setDraftIsActive(event.target.checked)}
-                      className="h-4 w-4 accent-[#214b7a]"
+                      className="h-4 w-4 accent-[var(--admin-brand-strong)]"
                     />
-                    這則公告目前啟用
+                    這則公告要在前台顯示
                   </label>
                   <div className="flex flex-wrap gap-2">
                     <Button
                       type="button"
                       disabled={isPending || !draftMessage.trim()}
                       onClick={() => handleSave(announcement._id)}
-                      className="bg-[#214b7a]"
+                      className="bg-[var(--admin-ink)] text-white hover:bg-[var(--admin-brand-strong)]"
                     >
-                      {isPending ? "儲存中..." : "儲存修改"}
+                      {isPending ? "儲存中..." : "儲存變更"}
                     </Button>
                     <button
                       type="button"
-                      className="min-h-11 rounded-3xl border border-[#cfc1b0] bg-white/80 px-4 py-3 text-sm font-semibold text-[#3d352f] transition hover:border-[#214b7a] hover:text-[#214b7a]"
+                      className="min-h-11 rounded-full border border-[var(--admin-border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--admin-muted)] transition hover:border-[var(--admin-border-strong)] hover:text-[var(--admin-brand-strong)]"
                       onClick={() => {
                         setEditingId(null);
                         setDraftMessage("");
@@ -204,12 +204,14 @@ export function AnnouncementTable({ announcements }: { announcements: Announceme
                 </div>
               ) : (
                 <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                  <p className="max-w-3xl text-sm leading-7 text-[#332d29]">{announcement.message}</p>
+                  <p className="max-w-3xl text-sm leading-7 text-[var(--admin-ink)]">
+                    {announcement.message}
+                  </p>
 
                   <div className="flex flex-wrap gap-2 md:justify-end">
                     <button
                       type="button"
-                      className="min-h-11 rounded-3xl border border-[#cfc1b0] bg-white/80 px-4 py-3 text-sm font-semibold text-[#3d352f] transition hover:border-[#214b7a] hover:text-[#214b7a]"
+                      className="min-h-11 rounded-full border border-[var(--admin-border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--admin-brand-strong)] transition hover:border-[var(--admin-border-strong)]"
                       onClick={() => {
                         setEditingId(announcement._id);
                         setDraftMessage(announcement.message);
@@ -221,7 +223,7 @@ export function AnnouncementTable({ announcements }: { announcements: Announceme
                     </button>
                     <button
                       type="button"
-                      className="min-h-11 rounded-3xl border border-[#cfc1b0] bg-white/80 px-4 py-3 text-sm font-semibold text-[#3d352f] transition hover:border-[#214b7a] hover:text-[#214b7a]"
+                      className="min-h-11 rounded-full border border-[var(--admin-border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--admin-brand-strong)] transition hover:border-[var(--admin-border-strong)]"
                       disabled={isPending}
                       onClick={() => handleToggle(announcement)}
                     >
@@ -229,7 +231,7 @@ export function AnnouncementTable({ announcements }: { announcements: Announceme
                     </button>
                     <Button
                       type="button"
-                      className="bg-red-700"
+                      className="bg-[#8e4b45] text-white hover:bg-[#7b3e39]"
                       disabled={isPending}
                       onClick={() => handleDelete(announcement._id)}
                     >
