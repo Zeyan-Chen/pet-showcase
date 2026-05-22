@@ -9,16 +9,45 @@ export function AnnouncementBar({ announcements }: { announcements: Announcement
   const [currentIndex, setCurrentIndex] = useState(0);
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const textRef = useRef<HTMLSpanElement | null>(null);
+  const lastSignatureRef = useRef("");
   const [animationMetrics, setAnimationMetrics] = useState({
     centerOffset: "-50%",
     exitOffset: "-100%",
     textWidth: "0px",
     viewportWidth: "0px"
   });
+  const announcementsSignature = useMemo(
+    () =>
+      announcements
+        .map((announcement) => `${announcement._id}:${announcement.message}:${announcement.isActive}`)
+        .join("|"),
+    [announcements]
+  );
 
   useEffect(() => {
-    setCurrentIndex(0);
-  }, [announcements]);
+    if (!announcements.length) {
+      setCurrentIndex(0);
+      lastSignatureRef.current = "";
+      return;
+    }
+
+    if (!lastSignatureRef.current) {
+      lastSignatureRef.current = announcementsSignature;
+      setCurrentIndex((current) =>
+        current >= announcements.length ? 0 : current
+      );
+      return;
+    }
+
+    if (lastSignatureRef.current === announcementsSignature) {
+      return;
+    }
+
+    lastSignatureRef.current = announcementsSignature;
+    setCurrentIndex((current) =>
+      current >= announcements.length ? 0 : current
+    );
+  }, [announcements.length, announcementsSignature]);
 
   useEffect(() => {
     if (announcements.length <= 1) {
@@ -32,7 +61,7 @@ export function AnnouncementBar({ announcements }: { announcements: Announcement
     return () => {
       window.clearInterval(timer);
     };
-  }, [announcements]);
+  }, [announcements.length]);
 
   if (announcements.length === 0) {
     return null;
