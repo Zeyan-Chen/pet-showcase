@@ -86,7 +86,7 @@ export function AnnouncementBar({ announcements }: { announcements: Announcement
   }, [currentAnnouncement._id, currentIndex, isAnimated]);
 
   return (
-    <div className="announcement-bar bg-[#123f7c] px-4 py-2 text-center text-[0.72rem] font-semibold text-white/90 sm:text-[0.78rem]">
+    <div className="announcement-bar bg-[#123f7c] py-2 text-center text-[0.72rem] font-semibold text-white/90 sm:text-[0.78rem]">
       <div ref={viewportRef} className="announcement-viewport">
         <span
           ref={textRef}
