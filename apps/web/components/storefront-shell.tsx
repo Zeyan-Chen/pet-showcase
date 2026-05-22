@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { getActiveAnnouncements } from "../lib/announcements";
 import { getSiteSettings } from "../lib/site-settings";
 import { AnnouncementBar } from "./announcement-bar";
+import { StorefrontHomeLink } from "./storefront-home-link";
 
 type StorefrontShellProps = {
   categoryNav?: ReactNode;
@@ -27,11 +27,7 @@ export async function StorefrontShell({
           <div className="store-header-brand-row py-4 sm:py-5">
             <div className="store-header-brand-slot">
               {siteSettings ? (
-                <Link
-                  href="/"
-                  aria-label="回到首頁"
-                  className="store-header-logo-frame"
-                >
+                <StorefrontHomeLink className="store-header-logo-frame">
                   <Image
                     src={siteSettings.logoImageUrl}
                     alt={siteSettings.logoAlt}
@@ -40,15 +36,11 @@ export async function StorefrontShell({
                     priority
                     className="store-header-logo-image"
                   />
-                </Link>
+                </StorefrontHomeLink>
               ) : (
-                <Link
-                  href="/"
-                  aria-label="回到首頁"
-                  className="store-header-logo-placeholder"
-                >
+                <StorefrontHomeLink className="store-header-logo-placeholder">
                   Logo
-                </Link>
+                </StorefrontHomeLink>
               )}
             </div>
           </div>

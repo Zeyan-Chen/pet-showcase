@@ -56,8 +56,13 @@ a {
 
 .store-header-logo-frame {
   align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
   display: flex;
   justify-content: center;
+  padding: 0;
   width: min(100%, 18rem);
 }
 
@@ -71,6 +76,7 @@ a {
 
 .store-header-logo-placeholder {
   align-items: center;
+  appearance: none;
   background: #fffdfa;
   border: 1px solid #d8cdbf;
   border-radius: 1.25rem;
@@ -82,6 +88,7 @@ a {
   height: 4rem;
   justify-content: center;
   letter-spacing: 0.22em;
+  padding: 0;
   text-align: center;
   text-transform: uppercase;
   width: 8rem;
