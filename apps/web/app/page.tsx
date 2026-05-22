@@ -83,8 +83,8 @@ export default async function HomePage({
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3 sm:w-auto">
-                <div className="rounded-[1.4rem] bg-[linear-gradient(180deg,#214b7a,#17385d)] px-4 py-3 text-stone-100 shadow-[0_20px_28px_rgba(16,38,63,0.22)]">
-                  <p className="text-[0.64rem] uppercase tracking-[0.22em] text-white/70">
+                <div className="rounded-[1.4rem] bg-[#efe7da] px-4 py-3 text-[var(--store-ink)] shadow-[inset_0_0_0_1px_rgba(120,105,90,0.08)]">
+                  <p className="text-[0.64rem] uppercase tracking-[0.22em] text-[#6f655c]">
                     已展示個體
                   </p>
                   <p className="mt-2 text-2xl font-semibold">

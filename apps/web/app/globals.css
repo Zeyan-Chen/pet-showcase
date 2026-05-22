@@ -64,7 +64,7 @@ a {
 .store-header-logo-image {
   display: block;
   height: auto;
-  max-height: 6.75rem;
+  max-height: 4.75rem;
   object-fit: contain;
   width: 100%;
 }

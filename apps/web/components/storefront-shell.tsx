@@ -9,10 +9,13 @@ type StorefrontShellProps = {
   children: ReactNode;
 };
 
-export async function StorefrontShell({ categoryNav, children }: StorefrontShellProps) {
+export async function StorefrontShell({
+  categoryNav,
+  children,
+}: StorefrontShellProps) {
   const [announcements, siteSettings] = await Promise.all([
     getActiveAnnouncements(),
-    getSiteSettings()
+    getSiteSettings(),
   ]);
 
   return (
@@ -34,14 +37,14 @@ export async function StorefrontShell({ categoryNav, children }: StorefrontShell
                   />
                 </div>
               ) : (
-                <div className="store-header-logo-placeholder">
-                  Logo
-                </div>
+                <div className="store-header-logo-placeholder">Logo</div>
               )}
             </div>
           </div>
           {categoryNav ? (
-            <div className="store-header-nav-row border-t border-[#ddd2c4] py-3">{categoryNav}</div>
+            <div className="store-header-nav-row border-t border-[#ddd2c4] py-3">
+              {categoryNav}
+            </div>
           ) : null}
         </div>
       </header>

@@ -39,10 +39,9 @@ function extractCloudinaryPublicId(url: string) {
       return "";
     }
 
-    pathSegments[pathSegments.length - 1] = pathSegments[pathSegments.length - 1].replace(
-      /\.[^/.]+$/,
-      ""
-    );
+    pathSegments[pathSegments.length - 1] = pathSegments[
+      pathSegments.length - 1
+    ].replace(/\.[^/.]+$/, "");
 
     return pathSegments.join("/");
   } catch {
@@ -51,14 +50,20 @@ function extractCloudinaryPublicId(url: string) {
 }
 
 export function SiteSettingsForm({
-  initialValue
+  initialValue,
 }: {
   initialValue?: SiteSettingsRecord;
 }) {
   const router = useRouter();
-  const [logoImageUrl, setLogoImageUrl] = useState(initialValue?.logoImageUrl ?? "");
-  const [logoPublicId, setLogoPublicId] = useState(initialValue?.logoPublicId ?? "");
-  const [logoAlt, setLogoAlt] = useState(initialValue?.logoAlt ?? "Rookie Gecko logo");
+  const [logoImageUrl, setLogoImageUrl] = useState(
+    initialValue?.logoImageUrl ?? "",
+  );
+  const [logoPublicId, setLogoPublicId] = useState(
+    initialValue?.logoPublicId ?? "",
+  );
+  const [logoAlt, setLogoAlt] = useState(
+    initialValue?.logoAlt ?? "Rookie Gecko logo",
+  );
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -79,7 +84,7 @@ export function SiteSettingsForm({
 
       const response = await fetch("/api/uploads", {
         method: "POST",
-        body: formData
+        body: formData,
       });
 
       if (!response.ok) {
@@ -116,19 +121,21 @@ export function SiteSettingsForm({
     const response = await fetch("/api/settings", {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         logoImageUrl,
         logoPublicId,
-        logoAlt: previewAlt
-      })
+        logoAlt: previewAlt,
+      }),
     });
 
     setIsSubmitting(false);
 
     if (!response.ok) {
-      const result = (await response.json().catch(() => null)) as { message?: string } | null;
+      const result = (await response.json().catch(() => null)) as {
+        message?: string;
+      } | null;
       setError(result?.message ?? "儲存站台設定失敗，請再試一次。");
       return;
     }
@@ -146,9 +153,12 @@ export function SiteSettingsForm({
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--admin-muted)]">
               Logo Upload
             </p>
-            <h2 className="text-2xl font-semibold text-[var(--admin-ink)]">上傳站台 Logo</h2>
+            <h2 className="text-2xl font-semibold text-[var(--admin-ink)]">
+              上傳站台 Logo
+            </h2>
             <p className="text-sm leading-6 text-[var(--admin-muted)]">
-              上傳新的 Logo 後，前台會立即改用這張圖片。建議使用透明背景的 PNG，桌機和手機版都會套用同一張圖。
+              上傳新的 Logo 後，前台會立即改用這張圖片。建議使用透明背景的
+              PNG，桌機和手機版都會套用同一張圖。
             </p>
           </div>
 
@@ -169,7 +179,9 @@ export function SiteSettingsForm({
               id="site-logo-file"
               type="file"
               accept="image/*"
-              onChange={(event) => handleFileChange(event.target.files?.[0] ?? null)}
+              onChange={(event) =>
+                handleFileChange(event.target.files?.[0] ?? null)
+              }
               className="block w-full text-sm text-[var(--admin-muted)]"
             />
             <p className="text-sm text-[var(--admin-muted)]">
@@ -201,13 +213,17 @@ export function SiteSettingsForm({
             </div>
           ) : null}
 
-          {isUploading ? <p className="text-sm text-[var(--admin-muted)]">Logo 上傳中...</p> : null}
+          {isUploading ? (
+            <p className="text-sm text-[var(--admin-muted)]">Logo 上傳中...</p>
+          ) : null}
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
           <Button
             type="button"
             onClick={handleSubmit}
-            disabled={isUploading || isSubmitting || !logoImageUrl || !previewAlt.trim()}
+            disabled={
+              isUploading || isSubmitting || !logoImageUrl || !previewAlt.trim()
+            }
             className="w-full bg-[var(--admin-ink)] text-white hover:bg-[var(--admin-brand-strong)]"
           >
             {isSubmitting ? "儲存中..." : "儲存站台設定"}
@@ -221,16 +237,23 @@ export function SiteSettingsForm({
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--admin-muted)]">
               Preview
             </p>
-            <h2 className="text-2xl font-semibold text-[var(--admin-ink)]">Logo 預覽</h2>
+            <h2 className="text-2xl font-semibold text-[var(--admin-ink)]">
+              Logo 預覽
+            </h2>
             <p className="text-sm leading-6 text-[var(--admin-muted)]">
-              這裡會顯示目前即將套用到前台的 Logo。儲存成功後，前台 header 的 Logo 區塊會立即改成這張圖。
+              這裡會顯示目前即將套用到前台的 Logo。儲存成功後，前台 header 的
+              Logo 區塊會立即改成這張圖。
             </p>
           </div>
 
           <section className="rounded-[1.75rem] border border-[var(--admin-border)] bg-[linear-gradient(180deg,#fffdfa,#f7f1e8)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]">
             <div className="flex min-h-56 items-center justify-center rounded-[1.5rem] border border-dashed border-[var(--admin-border)] bg-white px-4 py-6">
               {logoImageUrl ? (
-                <img src={logoImageUrl} alt={previewAlt} className="max-h-44 w-full object-contain" />
+                <img
+                  src={logoImageUrl}
+                  alt={previewAlt}
+                  className="max-h-44 w-full object-contain"
+                />
               ) : (
                 <div className="flex h-28 w-full max-w-xs items-center justify-center rounded-[1.25rem] border border-[var(--admin-border)] bg-[var(--admin-surface-2)] px-4 text-center text-sm font-semibold text-[var(--admin-muted)]">
                   尚未設定 Logo
