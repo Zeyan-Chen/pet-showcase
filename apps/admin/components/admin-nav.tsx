@@ -7,6 +7,7 @@ const items = [
   { href: "/products", label: "商品" },
   { href: "/categories", label: "分類" },
   { href: "/announcements", label: "公告" },
+  { href: "/settings", label: "站台設定" }
 ];
 
 export function AdminNav() {
@@ -24,7 +25,7 @@ export function AdminNav() {
             Gecko Admin
           </p>
           <p className="text-lg font-semibold text-[var(--admin-brand-strong)]">
-            守宮後台管理
+            守宮網站管理後台
           </p>
         </div>
 

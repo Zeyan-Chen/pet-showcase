@@ -6,14 +6,14 @@ export async function POST(request: Request) {
   try {
     await requireAdmin();
   } catch {
-    return NextResponse.json({ message: "未授權" }, { status: 401 });
+    return NextResponse.json({ message: "需要管理員權限。" }, { status: 401 });
   }
 
   const formData = await request.formData();
   const file = formData.get("file");
 
   if (!(file instanceof File)) {
-    return NextResponse.json({ message: "Missing file" }, { status: 400 });
+    return NextResponse.json({ message: "缺少上傳檔案。" }, { status: 400 });
   }
 
   const arrayBuffer = await file.arrayBuffer();

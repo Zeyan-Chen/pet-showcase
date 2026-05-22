@@ -38,6 +38,59 @@ a {
   overflow: hidden;
 }
 
+.store-header-shell {
+  display: flex;
+  flex-direction: column;
+}
+
+.store-header-brand-row {
+  display: flex;
+  justify-content: center;
+}
+
+.store-header-brand-slot {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.store-header-logo-frame {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: min(100%, 18rem);
+}
+
+.store-header-logo-image {
+  display: block;
+  height: auto;
+  max-height: 6.75rem;
+  object-fit: contain;
+  width: 100%;
+}
+
+.store-header-logo-placeholder {
+  align-items: center;
+  background: #fffdfa;
+  border: 1px solid #d8cdbf;
+  border-radius: 1.25rem;
+  box-shadow: 0 16px 24px rgba(16, 38, 63, 0.07);
+  color: #7f766e;
+  display: flex;
+  font-size: 0.68rem;
+  font-weight: 600;
+  height: 4rem;
+  justify-content: center;
+  letter-spacing: 0.22em;
+  text-align: center;
+  text-transform: uppercase;
+  width: 8rem;
+}
+
+.store-header-nav-row {
+  margin-top: 0.25rem;
+}
+
 .announcement-viewport {
   position: relative;
   min-height: 1.4rem;
@@ -163,6 +216,28 @@ a {
 }
 
 @media (min-width: 1024px) {
+  .store-header-brand-row {
+    justify-content: flex-start;
+  }
+
+  .store-header-brand-slot {
+    justify-content: flex-start;
+  }
+
+  .store-header-logo-frame {
+    justify-content: flex-start;
+    width: min(100%, 21rem);
+  }
+
+  .store-header-logo-image {
+    max-height: 7.5rem;
+  }
+
+  .store-header-logo-placeholder {
+    height: 5rem;
+    width: 10rem;
+  }
+
   .store-nav-wrap {
     margin-inline: 0;
   }

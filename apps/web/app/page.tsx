@@ -15,7 +15,10 @@ function getActiveSlug(searchValue: string | string[] | undefined) {
   return searchValue;
 }
 
-function getBrowseTitle(activeCategory: CategoryRecord | null, activeSlug?: string) {
+function getBrowseTitle(
+  activeCategory: CategoryRecord | null,
+  activeSlug?: string,
+) {
   if (activeCategory) {
     return activeCategory.name;
   }
@@ -27,7 +30,10 @@ function getBrowseTitle(activeCategory: CategoryRecord | null, activeSlug?: stri
   return "全部守宮";
 }
 
-function getBrowseDescription(activeCategory: CategoryRecord | null, activeSlug?: string) {
+function getBrowseDescription(
+  activeCategory: CategoryRecord | null,
+  activeSlug?: string,
+) {
   if (activeCategory) {
     return `目前展示 ${activeCategory.name} 分類下已發布的守宮個體。`;
   }
@@ -40,7 +46,7 @@ function getBrowseDescription(activeCategory: CategoryRecord | null, activeSlug?
 }
 
 export default async function HomePage({
-  searchParams
+  searchParams,
 }: {
   searchParams?: Promise<{ category?: string | string[] }>;
 }) {
@@ -48,14 +54,19 @@ export default async function HomePage({
   const activeSlug = getActiveSlug(resolvedSearchParams.category);
   const [categories, products] = await Promise.all([
     getCategories(),
-    getPublishedProducts(activeSlug)
+    getPublishedProducts(activeSlug),
   ]);
-  const activeCategory = categories.find((category) => category.slug === activeSlug) ?? null;
+  const activeCategory =
+    categories.find((category) => category.slug === activeSlug) ?? null;
   const browseTitle = getBrowseTitle(activeCategory, activeSlug);
   const browseDescription = getBrowseDescription(activeCategory, activeSlug);
 
   return (
-    <StorefrontShell categoryNav={<CategoryNav categories={categories} activeSlug={activeSlug} />}>
+    <StorefrontShell
+      categoryNav={
+        <CategoryNav categories={categories} activeSlug={activeSlug} />
+      }
+    >
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <section className="space-y-4">
           <header className="rounded-[2rem] border border-[#d8cdbf] bg-[linear-gradient(180deg,rgba(248,244,236,0.98),rgba(240,232,220,0.98))] p-5 text-[var(--store-ink)] shadow-[0_24px_56px_rgba(9,22,39,0.22)] sm:p-6">
@@ -64,21 +75,29 @@ export default async function HomePage({
                 <p className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[#6f655c]">
                   守宮品種展示
                 </p>
-                <h1 className="text-2xl font-semibold sm:text-3xl">{browseTitle}</h1>
-                <p className="max-w-2xl text-sm leading-7 text-[#5f5851]">{browseDescription}</p>
+                <h1 className="text-2xl font-semibold sm:text-3xl">
+                  {browseTitle}
+                </h1>
+                <p className="max-w-2xl text-sm leading-7 text-[#5f5851]">
+                  {browseDescription}
+                </p>
               </div>
               <div className="grid grid-cols-2 gap-3 sm:w-auto">
                 <div className="rounded-[1.4rem] bg-[linear-gradient(180deg,#214b7a,#17385d)] px-4 py-3 text-stone-100 shadow-[0_20px_28px_rgba(16,38,63,0.22)]">
                   <p className="text-[0.64rem] uppercase tracking-[0.22em] text-white/70">
                     已展示個體
                   </p>
-                  <p className="mt-2 text-2xl font-semibold">{products.length}</p>
+                  <p className="mt-2 text-2xl font-semibold">
+                    {products.length}
+                  </p>
                 </div>
                 <div className="rounded-[1.4rem] bg-[#efe7da] px-4 py-3 text-[var(--store-ink)] shadow-[inset_0_0_0_1px_rgba(120,105,90,0.08)]">
                   <p className="text-[0.64rem] uppercase tracking-[0.22em] text-[#6f655c]">
                     分類數量
                   </p>
-                  <p className="mt-2 text-2xl font-semibold">{Math.max(categories.length, 1)}</p>
+                  <p className="mt-2 text-2xl font-semibold">
+                    {Math.max(categories.length, 1)}
+                  </p>
                 </div>
               </div>
             </div>
