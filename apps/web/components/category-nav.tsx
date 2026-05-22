@@ -63,9 +63,6 @@ export function CategoryNav({ categories, activeSlug }: CategoryNavProps) {
           aria-current={activeSlug ? undefined : "page"}
         >
           <span>全部</span>
-          {pendingHref === "/" ? (
-            <span className="store-nav-loading-dot" aria-hidden="true" />
-          ) : null}
         </button>
         {categories.map((category) => {
           const href = buildCategoryHref(category.slug);
@@ -84,9 +81,6 @@ export function CategoryNav({ categories, activeSlug }: CategoryNavProps) {
               aria-current={isActive ? "page" : undefined}
             >
               <span>{category.name}</span>
-              {pendingHref === href ? (
-                <span className="store-nav-loading-dot" aria-hidden="true" />
-              ) : null}
             </button>
           );
         })}

@@ -271,28 +271,6 @@ a {
   box-shadow: inset 0 0 0 1px rgba(33, 75, 122, 0.12);
 }
 
-.store-nav-loading-dot {
-  animation: store-nav-dot 880ms ease-in-out infinite;
-  background: currentColor;
-  border-radius: 999px;
-  display: inline-flex;
-  height: 0.42rem;
-  width: 0.42rem;
-}
-
-@keyframes store-nav-dot {
-  0%,
-  100% {
-    opacity: 0.35;
-    transform: scale(0.84);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 .store-overlay-spinner {
   animation: store-overlay-spin 760ms linear infinite;
   border: 2px solid rgba(33, 75, 122, 0.16);
