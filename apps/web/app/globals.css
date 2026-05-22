@@ -14,6 +14,7 @@
   --store-accent: #214b7a;
   --store-accent-strong: #17385d;
   --store-highlight: #cf8f44;
+  --store-loading-top: 10.5rem;
 }
 
 html {
@@ -193,14 +194,22 @@ a {
 
 .store-loading-overlay {
   align-items: center;
-  background: rgba(244, 239, 230, 0.68);
-  backdrop-filter: blur(2px);
+  background: rgba(244, 239, 230, 0.66);
+  backdrop-filter: blur(4px);
   display: flex;
-  inset: 0;
+  inset-inline: 0;
+  bottom: 0;
   justify-content: center;
   pointer-events: none;
   position: fixed;
+  top: var(--store-loading-top);
   z-index: 70;
+}
+
+.store-loading-overlay-fullscreen {
+  inset: 0;
+  top: 0;
+  z-index: 90;
 }
 
 .store-loading-overlay-card {
@@ -295,6 +304,10 @@ a {
 }
 
 @media (min-width: 1024px) {
+  :root {
+    --store-loading-top: 12.75rem;
+  }
+
   .store-header-brand-row {
     justify-content: flex-start;
   }

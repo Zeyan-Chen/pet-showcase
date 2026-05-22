@@ -5,21 +5,16 @@ import type { ProductRecord } from "@pet-showcase/shared";
 const currencyFormatter = new Intl.NumberFormat("en-US");
 
 export function ProductCard({
-  product,
-  index = 0
+  product
 }: {
   product: ProductRecord;
-  index?: number;
 }) {
-  const imageClass =
-    index % 3 === 0 ? "aspect-[4/5.3]" : index % 3 === 1 ? "aspect-[4/4.6]" : "aspect-[4/5.8]";
-
   return (
     <Link
       href={`/products/${product._id}`}
       className="group block overflow-hidden rounded-[1.75rem] border border-[#ddd3c6] bg-[#fffdfa] shadow-[0_18px_46px_rgba(16,38,63,0.1)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_56px_rgba(16,38,63,0.16)]"
     >
-      <div className={`relative ${imageClass} overflow-hidden bg-[#ddd3c5]`}>
+      <div className="relative aspect-[4/5] overflow-hidden bg-[#ddd3c5]">
         <Image
           src={product.imageUrl}
           alt={product.name}

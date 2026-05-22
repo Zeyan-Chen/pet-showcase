@@ -86,10 +86,14 @@ export function CategoryNav({ categories, activeSlug }: CategoryNavProps) {
         })}
       </nav>
       <div className="sr-only" aria-live="polite">
-        {isPending ? "分類切換中..." : ""}
+        {isPending ? "頁面載入中" : ""}
       </div>
       {isPending ? (
-        <div className="store-loading-overlay" aria-hidden="true">
+        <div
+          className="store-loading-overlay store-loading-overlay-fullscreen"
+          aria-hidden="true"
+          aria-label="頁面載入中"
+        >
           <div className="store-loading-overlay-card">
             <span className="store-overlay-spinner" />
             <span>載入中...</span>
