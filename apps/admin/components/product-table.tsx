@@ -8,7 +8,7 @@ export function ProductTable({ products }: { products: ProductRecord[] }) {
       <Card className="border border-dashed border-[var(--admin-border)] bg-[var(--admin-card)] p-8 text-center shadow-none">
         <p className="text-base font-semibold text-[var(--admin-ink)]">目前還沒有商品</p>
         <p className="mt-2 text-sm leading-6 text-[var(--admin-muted)]">
-          你可以先新增一筆守宮資料，之後再補上圖片、描述與發布狀態。
+          你可以先建立分類，再新增商品與上傳圖片。
         </p>
       </Card>
     );
@@ -31,7 +31,9 @@ export function ProductTable({ products }: { products: ProductRecord[] }) {
               <div className="min-w-0 space-y-2">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="rounded-full bg-[var(--admin-brand-soft)] px-3 py-1 text-[11px] font-semibold tracking-[0.18em] text-[var(--admin-brand-strong)]">
-                    {product.category.name}
+                    {product.childCategory
+                      ? `${product.mainCategory.name} / ${product.childCategory.name}`
+                      : product.mainCategory.name}
                   </span>
                   <span
                     className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-[0.18em] ${

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { CategoryRecord, ProductRecord } from "@pet-showcase/shared";
 import { Button, Card, Input, Textarea } from "@pet-showcase/ui";
 import { ImageUpload } from "./image-upload";
@@ -20,16 +20,32 @@ export function ProductForm({
   const [imageUrl, setImageUrl] = useState(initialValue?.imageUrl ?? "");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(initialValue?.categoryId ?? "");
-  const hasCategories = categories.length > 0;
+  const [selectedMainCategoryId, setSelectedMainCategoryId] = useState(
+    initialValue?.mainCategoryId ?? ""
+  );
+  const [selectedChildCategoryId, setSelectedChildCategoryId] = useState(
+    initialValue?.childCategoryId ?? ""
+  );
+
+  const mainCategories = useMemo(
+    () => categories.filter((category) => category.parentCategoryId === null),
+    [categories]
+  );
+  const childCategories = useMemo(
+    () => categories.filter((category) => category.parentCategoryId === selectedMainCategoryId),
+    [categories, selectedMainCategoryId]
+  );
+  const hasMainCategories = mainCategories.length > 0;
 
   async function handleSubmit(formData: FormData) {
     setError("");
 
-    const categoryId = String(formData.get("categoryId") ?? selectedCategoryId);
+    const mainCategoryId = String(formData.get("mainCategoryId") ?? selectedMainCategoryId);
+    const childCategoryId =
+      String(formData.get("childCategoryId") ?? selectedChildCategoryId) || null;
 
-    if (!categoryId) {
-      setError("請先選擇商品分類。");
+    if (!mainCategoryId) {
+      setError("請先選擇主分類。");
       return;
     }
 
@@ -41,7 +57,8 @@ export function ProductForm({
       imageUrl,
       description: String(formData.get("description") ?? ""),
       status: String(formData.get("status") ?? "draft"),
-      categoryId
+      mainCategoryId,
+      childCategoryId
     };
 
     const endpoint = action === "create" ? "/api/products" : `/api/products/${initialValue?._id}`;
@@ -74,7 +91,7 @@ export function ProductForm({
           </p>
           <h1 className="text-3xl font-bold text-[var(--admin-ink)]">{title}</h1>
           <p className="max-w-2xl text-sm leading-6 text-[var(--admin-muted)]">
-            在這裡設定商品名稱、價格、圖片、描述與分類，完成後即可回到商品列表。
+            先選主分類，再視需要選擇細項分類；沒有細項時只存主分類即可。
           </p>
         </div>
 
@@ -99,9 +116,9 @@ export function ProductForm({
           <div className="space-y-5">
             <div className="space-y-2">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--admin-muted)]">
-                商品資訊
+                商品內容
               </p>
-              <h2 className="text-xl font-semibold text-[var(--admin-ink)]">基本資料</h2>
+              <h2 className="text-xl font-semibold text-[var(--admin-ink)]">基本資訊</h2>
             </div>
 
             <div className="space-y-2">
@@ -115,7 +132,7 @@ export function ProductForm({
                 id="product-name"
                 name="name"
                 defaultValue={initialValue?.name}
-                placeholder="輸入商品名稱"
+                placeholder="請輸入商品名稱"
                 required
               />
             </div>
@@ -134,7 +151,7 @@ export function ProductForm({
                   type="number"
                   min="0"
                   defaultValue={initialValue?.price}
-                  placeholder="輸入價格"
+                  placeholder="請輸入價格"
                   required
                 />
               </div>
@@ -144,7 +161,7 @@ export function ProductForm({
                   htmlFor="product-status"
                   className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--admin-muted)]"
                 >
-                  發布狀態
+                  狀態
                 </label>
                 <select
                   id="product-status"
@@ -169,7 +186,7 @@ export function ProductForm({
                 id="product-description"
                 name="description"
                 defaultValue={initialValue?.description}
-                placeholder="輸入商品描述"
+                placeholder="請輸入商品描述"
                 required
               />
             </div>
@@ -182,36 +199,63 @@ export function ProductForm({
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--admin-muted)]">
                 分類與圖片
               </p>
-              <h2 className="text-xl font-semibold text-[var(--admin-ink)]">補充設定</h2>
+              <h2 className="text-xl font-semibold text-[var(--admin-ink)]">分類設定</h2>
             </div>
 
             <div className="space-y-2">
               <label
-                htmlFor="product-category"
+                htmlFor="product-main-category"
                 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--admin-muted)]"
               >
-                商品分類
+                主分類
               </label>
               <select
-                id="product-category"
-                name="categoryId"
-                value={selectedCategoryId}
-                onChange={(event) => setSelectedCategoryId(event.target.value)}
-                disabled={!hasCategories}
+                id="product-main-category"
+                name="mainCategoryId"
+                value={selectedMainCategoryId}
+                onChange={(event) => {
+                  setSelectedMainCategoryId(event.target.value);
+                  setSelectedChildCategoryId("");
+                }}
+                disabled={!hasMainCategories}
                 className="min-h-11 w-full rounded-3xl border border-[var(--admin-border)] bg-white px-4 text-sm text-[var(--admin-ink)] outline-none focus:border-[var(--admin-border-strong)] disabled:cursor-not-allowed disabled:bg-stone-100 disabled:text-stone-400"
                 required
               >
-                <option value="">選擇一個分類</option>
-                {categories.map((category) => (
+                <option value="">請選擇主分類</option>
+                {mainCategories.map((category) => (
+                  <option key={category._id} value={category._id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="product-child-category"
+                className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--admin-muted)]"
+              >
+                細項分類
+              </label>
+              <select
+                id="product-child-category"
+                name="childCategoryId"
+                value={selectedChildCategoryId}
+                onChange={(event) => setSelectedChildCategoryId(event.target.value)}
+                disabled={!selectedMainCategoryId || childCategories.length === 0}
+                className="min-h-11 w-full rounded-3xl border border-[var(--admin-border)] bg-white px-4 text-sm text-[var(--admin-ink)] outline-none focus:border-[var(--admin-border-strong)] disabled:cursor-not-allowed disabled:bg-stone-100 disabled:text-stone-400"
+              >
+                <option value="">不指定細項</option>
+                {childCategories.map((category) => (
                   <option key={category._id} value={category._id}>
                     {category.name}
                   </option>
                 ))}
               </select>
               <p className="text-sm leading-6 text-[var(--admin-muted)]">
-                {hasCategories
-                  ? "建立好的分類會出現在這裡，前台也會用同一組分類做導覽。"
-                  : "目前還沒有分類，請先到分類管理新增至少一個分類。"}
+                {selectedMainCategoryId && childCategories.length > 0
+                  ? "如果這個主分類底下有更細的品項，可以在這裡再往下指定。"
+                  : "如果目前沒有細項，保留空白即可。"}
               </p>
             </div>
 
@@ -223,7 +267,7 @@ export function ProductForm({
 
             <Button
               type="submit"
-              disabled={isSubmitting || !imageUrl || !hasCategories}
+              disabled={isSubmitting || !imageUrl || !hasMainCategories}
               className="w-full bg-[var(--admin-ink)] text-white hover:bg-[var(--admin-brand-strong)]"
             >
               {isSubmitting ? "儲存中..." : "儲存商品"}

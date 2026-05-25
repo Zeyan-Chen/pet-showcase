@@ -22,25 +22,28 @@ export default async function ProductDetailPage({
     notFound();
   }
 
+  const activeSlug = product.childCategory?.slug ?? product.mainCategory.slug;
+  const backLabel = product.childCategory?.name ?? product.mainCategory.name;
+
   return (
-    <StorefrontShell
-      categoryNav={<CategoryNav categories={categories} activeSlug={product.category.slug} />}
-    >
+    <StorefrontShell categoryNav={<CategoryNav categories={categories} activeSlug={activeSlug} />}>
       <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <div className="mb-6 rounded-[2rem] border border-[#d8cdbf] bg-[linear-gradient(180deg,rgba(248,244,236,0.98),rgba(240,232,220,0.98))] p-5 text-[var(--store-ink)] shadow-[0_24px_56px_rgba(16,38,63,0.16)] sm:p-6">
           <div className="space-y-3">
             <Link
-              href={`/?category=${product.category.slug}`}
+              href={`/?category=${activeSlug}`}
               className="inline-flex items-center text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[#6d6359] transition hover:text-[#17385d]"
             >
-              返回 {product.category.name}
+              返回 {backLabel}
             </Link>
             <p className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[#6d6359]">
-              {product.category.name}
+              {product.childCategory
+                ? `${product.mainCategory.name} / ${product.childCategory.name}`
+                : product.mainCategory.name}
             </p>
             <h1 className="text-3xl font-semibold sm:text-4xl">{product.name}</h1>
             <p className="max-w-3xl text-sm leading-7 text-[#5f5851] sm:text-base">
-              這裡展示的是目前已發布的守宮個體資訊，方便你依照品種快速查看外觀、售價與個體介紹。
+              這裡整理這隻守宮的基本展示資訊，方便你快速查看品系、價格與個體說明。
             </p>
           </div>
         </div>
@@ -54,9 +57,13 @@ export default async function ProductDetailPage({
             <div className="space-y-5">
               <div className="space-y-3 border-b border-[#d8cdbf] pb-5">
                 <p className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-[#214b7a]">
-                  品種分類
+                  分類資訊
                 </p>
-                <p className="text-xl font-semibold text-[#1f1a17]">{product.category.name}</p>
+                <p className="text-xl font-semibold text-[#1f1a17]">
+                  {product.childCategory
+                    ? `${product.mainCategory.name} / ${product.childCategory.name}`
+                    : product.mainCategory.name}
+                </p>
                 <p className="text-2xl font-semibold text-[#17385d]">
                   NT$ {currencyFormatter.format(product.price)}
                 </p>
@@ -65,12 +72,10 @@ export default async function ProductDetailPage({
                 <h2 className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-[#6d6359]">
                   個體介紹
                 </h2>
-                <p className="text-sm leading-7 text-[#4f4943] sm:text-base">
-                  {product.description}
-                </p>
+                <p className="text-sm leading-7 text-[#4f4943] sm:text-base">{product.description}</p>
               </div>
               <div className="rounded-[1.5rem] border border-[#d8cdbf] bg-[#f7f2e9] p-4 text-sm leading-7 text-[#625a53]">
-                實際展示內容會依照品種與個體狀態調整，若你想比較不同守宮品種，也可以回到上方分類導覽繼續瀏覽。
+                如需了解更多飼養資訊或想確認個體狀況，可以再透過後續聯繫方式進一步詢問。
               </div>
             </div>
           </section>

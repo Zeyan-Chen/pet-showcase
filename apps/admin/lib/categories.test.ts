@@ -27,6 +27,7 @@ describe("serializeCategory", () => {
       _id: { toString: () => "cat1" },
       name: "Leachianus",
       slug: "leachianus",
+      parentCategoryId: null,
       createdAt: new Date("2026-05-19T00:00:00.000Z"),
       updatedAt: new Date("2026-05-19T00:00:00.000Z")
     });
@@ -34,7 +35,8 @@ describe("serializeCategory", () => {
     expect(result).toMatchObject({
       _id: "cat1",
       name: "Leachianus",
-      slug: "leachianus"
+      slug: "leachianus",
+      parentCategoryId: null
     });
   });
 });

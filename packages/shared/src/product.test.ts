@@ -7,7 +7,7 @@ describe("productInputSchema", () => {
     expect(result.success).toBe(false);
   });
 
-  it("requires categoryId", () => {
+  it("requires mainCategoryId", () => {
     const result = productInputSchema.safeParse({
       name: "Milo",
       price: 1200,
@@ -17,5 +17,19 @@ describe("productInputSchema", () => {
     });
 
     expect(result.success).toBe(false);
+  });
+
+  it("allows a nullable childCategoryId", () => {
+    const result = productInputSchema.safeParse({
+      name: "Milo",
+      price: 1200,
+      imageUrl: "https://example.com/milo.jpg",
+      description: "Friendly pet",
+      status: "draft",
+      mainCategoryId: "main-1",
+      childCategoryId: null
+    });
+
+    expect(result.success).toBe(true);
   });
 });

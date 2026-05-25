@@ -4,6 +4,26 @@ import * as categoriesModule from "../lib/categories";
 import * as productsModule from "../lib/products";
 import HomePage from "./page";
 
+vi.mock("../components/storefront-shell", () => ({
+  StorefrontShell: ({ categoryNav, children }: { categoryNav?: any; children: any }) => (
+    <div>
+      {categoryNav}
+      {children}
+    </div>
+  )
+}));
+
+vi.mock("../components/category-nav", () => ({
+  CategoryNav: ({ categories, activeSlug }: { categories: Array<{ name: string }>; activeSlug?: string }) => (
+    <div data-testid="category-nav">
+      <span>{activeSlug ?? "all"}</span>
+      {categories.map((category) => (
+        <span key={category.name}>{category.name}</span>
+      ))}
+    </div>
+  )
+}));
+
 describe("HomePage", () => {
   afterEach(() => {
     vi.restoreAllMocks();
@@ -17,19 +37,30 @@ describe("HomePage", () => {
     });
 
     render(view);
-    expect(screen.getByText("守宮品種展示與在售個體一覽")).toBeInTheDocument();
+    expect(screen.getByText("守宮展示目錄")).toBeInTheDocument();
     expect(screen.getAllByText("全部守宮").length).toBeGreaterThan(0);
-    expect(screen.getByText("目前還沒有已公開的守宮個體。")).toBeInTheDocument();
+    expect(screen.getByText("目前還沒有展示中的守宮")).toBeInTheDocument();
   });
 
-  it("renders category-aware published products", async () => {
+  it("renders child-category-aware published products", async () => {
     vi.spyOn(categoriesModule, "getCategories").mockResolvedValueOnce([
       {
         _id: "cat-1",
-        name: "Leachianus",
-        slug: "leachianus",
+        name: "Geckos",
+        slug: "geckos",
+        parentCategoryId: null,
         createdAt: "2026-05-19T00:00:00.000Z",
-        updatedAt: "2026-05-19T00:00:00.000Z"
+        updatedAt: "2026-05-19T00:00:00.000Z",
+        children: [
+          {
+            _id: "cat-2",
+            name: "Leachianus",
+            slug: "leachianus",
+            parentCategoryId: "cat-1",
+            createdAt: "2026-05-19T00:00:00.000Z",
+            updatedAt: "2026-05-19T00:00:00.000Z"
+          }
+        ]
       }
     ]);
     vi.spyOn(productsModule, "getPublishedProducts").mockResolvedValueOnce([
@@ -40,11 +71,25 @@ describe("HomePage", () => {
         imageUrl: "https://example.com/milo.jpg",
         description: "Friendly pet",
         status: "published",
-        categoryId: "cat-1",
-        category: {
+        mainCategoryId: "cat-1",
+        childCategoryId: "cat-2",
+        mainCategory: {
           _id: "cat-1",
+          name: "Geckos",
+          slug: "geckos",
+          parentCategoryId: null
+        },
+        childCategory: {
+          _id: "cat-2",
           name: "Leachianus",
-          slug: "leachianus"
+          slug: "leachianus",
+          parentCategoryId: "cat-1"
+        },
+        category: {
+          _id: "cat-2",
+          name: "Leachianus",
+          slug: "leachianus",
+          parentCategoryId: "cat-1"
         },
         createdAt: "2026-05-19T00:00:00.000Z",
         updatedAt: "2026-05-19T00:00:00.000Z"
@@ -64,10 +109,12 @@ describe("HomePage", () => {
     vi.spyOn(categoriesModule, "getCategories").mockResolvedValueOnce([
       {
         _id: "cat-1",
-        name: "Leachianus",
-        slug: "leachianus",
+        name: "Geckos",
+        slug: "geckos",
+        parentCategoryId: null,
         createdAt: "2026-05-19T00:00:00.000Z",
-        updatedAt: "2026-05-19T00:00:00.000Z"
+        updatedAt: "2026-05-19T00:00:00.000Z",
+        children: []
       }
     ]);
     const getPublishedProductsSpy = vi
@@ -75,11 +122,11 @@ describe("HomePage", () => {
       .mockResolvedValueOnce([]);
 
     const view = await HomePage({
-      searchParams: Promise.resolve({ category: "leachianus" })
+      searchParams: Promise.resolve({ category: "geckos" })
     });
 
     render(view);
-    expect(getPublishedProductsSpy).toHaveBeenCalledWith("leachianus");
-    expect(screen.getAllByText("Leachianus").length).toBeGreaterThan(0);
+    expect(getPublishedProductsSpy).toHaveBeenCalledWith("geckos");
+    expect(screen.getAllByText("Geckos").length).toBeGreaterThan(0);
   });
 });

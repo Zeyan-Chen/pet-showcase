@@ -9,14 +9,17 @@ export const productInputSchema = z.object({
   imageUrl: z.string().url(),
   description: z.string().min(1).max(2000),
   status: productStatusSchema,
-  categoryId: z.string().min(1)
+  mainCategoryId: z.string().min(1),
+  childCategoryId: z.string().min(1).nullable().optional().default(null)
 });
 
 export type ProductInput = z.infer<typeof productInputSchema>;
 
 export type ProductRecord = ProductInput & {
   _id: string;
-  category: Pick<CategoryRecord, "_id" | "name" | "slug">;
+  mainCategory: Pick<CategoryRecord, "_id" | "name" | "slug" | "parentCategoryId">;
+  childCategory: Pick<CategoryRecord, "_id" | "name" | "slug" | "parentCategoryId"> | null;
+  category: Pick<CategoryRecord, "_id" | "name" | "slug" | "parentCategoryId">;
   createdAt: string;
   updatedAt: string;
 };

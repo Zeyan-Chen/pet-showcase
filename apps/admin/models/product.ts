@@ -15,7 +15,17 @@ const productSchema = new Schema(
     categoryId: {
       type: Schema.Types.ObjectId,
       ref: "Category",
-      required: true
+      required: false
+    },
+    mainCategoryId: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+      required: false
+    },
+    childCategoryId: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+      default: null
     }
   },
   {

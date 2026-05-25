@@ -15,7 +15,10 @@ export async function getPublishedProducts(categorySlug?: string): Promise<Produ
       return products;
     }
 
-    return products.filter((product) => product.category?.slug === categorySlug);
+    return products.filter(
+      (product) =>
+        product.mainCategory.slug === categorySlug || product.childCategory?.slug === categorySlug
+    );
   } catch {
     return [];
   }

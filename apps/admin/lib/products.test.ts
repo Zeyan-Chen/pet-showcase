@@ -11,7 +11,15 @@ describe("serializeProduct", () => {
       description: "Friendly pet",
       status: "published",
       categoryId: "cat1",
-      category: { _id: "cat1", name: "Leachianus", slug: "leachianus" },
+      mainCategoryId: "cat1",
+      childCategoryId: "child1",
+      mainCategory: { _id: "cat1", name: "Geckos", slug: "geckos", parentCategoryId: null },
+      childCategory: {
+        _id: "child1",
+        name: "Leachianus",
+        slug: "leachianus",
+        parentCategoryId: "cat1"
+      },
       createdAt: new Date("2026-05-19T00:00:00.000Z"),
       updatedAt: new Date("2026-05-19T00:00:00.000Z")
     });
@@ -19,6 +27,8 @@ describe("serializeProduct", () => {
     expect(result._id).toBe("abc123");
     expect(result.status).toBe("published");
     expect(result.category.name).toBe("Leachianus");
-    expect(result.categoryId).toBe("cat1");
+    expect(result.mainCategoryId).toBe("cat1");
+    expect(result.childCategoryId).toBe("child1");
+    expect(result.mainCategory.name).toBe("Geckos");
   });
 });

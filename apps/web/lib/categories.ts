@@ -1,7 +1,7 @@
-import type { CategoryRecord } from "@pet-showcase/shared";
+import type { CategoryTreeRecord } from "@pet-showcase/shared";
 import { fetchFromAdmin } from "./api";
 
-export async function getCategories(): Promise<CategoryRecord[]> {
+export async function getCategories(): Promise<CategoryTreeRecord[]> {
   try {
     const response = await fetchFromAdmin("/api/categories");
 
@@ -9,7 +9,7 @@ export async function getCategories(): Promise<CategoryRecord[]> {
       return [];
     }
 
-    return (await response.json()) as CategoryRecord[];
+    return (await response.json()) as CategoryTreeRecord[];
   } catch {
     return [];
   }
