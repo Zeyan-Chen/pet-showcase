@@ -120,10 +120,12 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
       <div
         key={category._id}
         className={`rounded-[1.25rem] border border-[var(--admin-border)] bg-[var(--admin-card)] p-4 ${
-          depth === "child" ? "ml-4" : ""
+          depth === "child"
+            ? "border-l-4 border-l-[var(--admin-brand-soft)] bg-[var(--admin-surface-2)] pl-5"
+            : ""
         }`}
       >
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
           <div className="min-w-0 space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--admin-muted)]">
               {depth === "main" ? "主分類" : "細項分類"}
@@ -187,7 +189,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
           </div>
 
           {!isEditing ? (
-            <div className="flex flex-wrap gap-2 md:justify-end">
+            <div className="flex flex-wrap items-start gap-2 md:w-[11rem] md:justify-end">
               <button
                 type="button"
                 className="min-h-11 rounded-full border border-[var(--admin-border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--admin-brand-strong)] transition hover:border-[var(--admin-border-strong)]"
