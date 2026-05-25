@@ -13,12 +13,19 @@ describe("serializeProduct", () => {
       categoryId: "cat1",
       mainCategoryId: "cat1",
       childCategoryId: "child1",
-      mainCategory: { _id: "cat1", name: "Geckos", slug: "geckos", parentCategoryId: null },
+      mainCategory: {
+        _id: "cat1",
+        name: "Geckos",
+        slug: "geckos",
+        parentCategoryId: null,
+        includeInAllListing: true
+      },
       childCategory: {
         _id: "child1",
         name: "Leachianus",
         slug: "leachianus",
-        parentCategoryId: "cat1"
+        parentCategoryId: "cat1",
+        includeInAllListing: true
       },
       createdAt: new Date("2026-05-19T00:00:00.000Z"),
       updatedAt: new Date("2026-05-19T00:00:00.000Z")
@@ -30,5 +37,6 @@ describe("serializeProduct", () => {
     expect(result.mainCategoryId).toBe("cat1");
     expect(result.childCategoryId).toBe("child1");
     expect(result.mainCategory.name).toBe("Geckos");
+    expect(result.mainCategory.includeInAllListing).toBe(true);
   });
 });

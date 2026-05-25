@@ -57,11 +57,11 @@ function getBrowseDescription(
   }
 
   if (activeMainCategory) {
-    return `以 ${activeMainCategory.name} 為主分類整理目前展示與在售的守宮個體。`;
+    return `以 ${activeMainCategory.name} 為主分類整理目前展示與在售的相關個體。`;
   }
 
   if (activeSlug) {
-    return "找不到對應的分類，請重新選擇想看的方向。";
+    return "目前找不到這個分類，請切換到其他分類看看。";
   }
 
   return "以品種與主分類整理目前展示與在售的守宮個體，方便你快速找到想看的方向。";
@@ -115,15 +115,15 @@ export default async function HomePage({
                   : activeMainCategory
                     ? `${activeMainCategory.name} 目前沒有展示中的個體`
                     : activeSlug
-                      ? "找不到符合的分類"
-                      : "目前還沒有展示中的守宮"}
+                      ? "目前找不到這個分類"
+                      : "目前沒有展示中的守宮"}
               </h2>
               <p className="mt-3 text-sm leading-7 text-[#d6ccbe]">
                 {activeChildCategory || activeMainCategory
                   ? "你可以先切換到其他主分類或細項，看看目前上架中的守宮個體。"
                   : activeSlug
-                    ? "請切換到其他分類，或回到全部分類重新瀏覽。"
-                    : "之後有新的展示個體上架時，這裡會顯示最新內容。"}
+                    ? "這個分類可能尚未建立，或目前沒有任何已發布商品。"
+                    : "之後新增已發布商品後，這裡就會開始顯示守宮個體。"}
               </p>
             </section>
           ) : (

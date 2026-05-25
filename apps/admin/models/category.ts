@@ -8,6 +8,10 @@ const categorySchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Category",
       default: null
+    },
+    includeInAllListing: {
+      type: Boolean,
+      default: true
     }
   },
   {

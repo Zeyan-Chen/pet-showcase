@@ -12,7 +12,7 @@ export async function getPublishedProducts(categorySlug?: string): Promise<Produ
     const products = (await response.json()) as ProductRecord[];
 
     if (!categorySlug) {
-      return products;
+      return products.filter((product) => product.mainCategory.includeInAllListing !== false);
     }
 
     return products.filter(

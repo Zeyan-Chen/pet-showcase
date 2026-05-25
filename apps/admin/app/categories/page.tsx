@@ -33,7 +33,7 @@ export default async function CategoriesPage() {
           <div className="space-y-2 lg:max-w-xl lg:text-right">
             <h1 className="text-3xl font-bold text-[var(--admin-ink)]">分類與細項</h1>
             <p className="text-sm leading-6 text-[var(--admin-muted)]">
-              在這裡建立主分類與細項分類，前台選單會直接依照這份結構呈現。
+              在這裡建立主分類與細項分類，前台選單會直接依照這份結構呈現，並可控制哪些主分類商品會進入「全部」。
             </p>
           </div>
         </div>

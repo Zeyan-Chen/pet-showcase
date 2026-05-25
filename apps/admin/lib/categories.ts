@@ -13,6 +13,7 @@ type RawCategory = {
   name: string;
   slug: string;
   parentCategoryId?: Types.ObjectId | string | null;
+  includeInAllListing?: boolean;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -101,11 +102,14 @@ async function resolveParentCategoryId(parentCategoryId: string | null | undefin
 }
 
 export function serializeCategory(category: RawCategory): CategoryRecord {
+  const isTopLevel = !category.parentCategoryId;
+
   return {
     _id: category._id.toString(),
     name: category.name,
     slug: category.slug,
     parentCategoryId: category.parentCategoryId ? category.parentCategoryId.toString() : null,
+    includeInAllListing: isTopLevel ? category.includeInAllListing ?? true : true,
     createdAt: category.createdAt.toISOString(),
     updatedAt: category.updatedAt.toISOString()
   };
@@ -150,10 +154,12 @@ export async function createCategory(input: CategoryInput) {
   const name = await assertCategoryNameAvailable(input.name);
   const slug = await resolveUniqueCategorySlug(name);
   const parentCategoryId = await resolveParentCategoryId(input.parentCategoryId);
+  const includeInAllListing = parentCategoryId ? true : input.includeInAllListing ?? true;
   const category = await CategoryModel.create({
     name,
     slug,
-    parentCategoryId
+    parentCategoryId,
+    includeInAllListing
   });
   return serializeCategory(category.toObject());
 }
@@ -173,6 +179,7 @@ export async function updateCategory(id: string, input: CategoryInput) {
   const name = await assertCategoryNameAvailable(input.name, id);
   const slug = await resolveUniqueCategorySlug(name, id);
   const parentCategoryId = await resolveParentCategoryId(input.parentCategoryId);
+  const includeInAllListing = parentCategoryId ? true : input.includeInAllListing ?? true;
 
   if (parentCategoryId && parentCategoryId.toString() === id) {
     throw new InvalidCategoryParentError("CATEGORY_CANNOT_PARENT_ITSELF");
@@ -191,7 +198,8 @@ export async function updateCategory(id: string, input: CategoryInput) {
     {
       name,
       slug,
-      parentCategoryId
+      parentCategoryId,
+      includeInAllListing
     },
     {
       new: true

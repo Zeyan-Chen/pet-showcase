@@ -9,6 +9,7 @@ type RawCategory = {
   name: string;
   slug: string;
   parentCategoryId?: Types.ObjectId | string | null;
+  includeInAllListing?: boolean;
 };
 
 type RawProduct = {
@@ -68,9 +69,9 @@ function getChildCategory(product: RawProduct) {
 
 async function getSerializedProductById(id: string) {
   const product = await ProductModel.findById(id)
-    .populate("categoryId", "name slug parentCategoryId")
-    .populate("mainCategoryId", "name slug parentCategoryId")
-    .populate("childCategoryId", "name slug parentCategoryId")
+    .populate("categoryId", "name slug parentCategoryId includeInAllListing")
+    .populate("mainCategoryId", "name slug parentCategoryId includeInAllListing")
+    .populate("childCategoryId", "name slug parentCategoryId includeInAllListing")
     .lean<RawProduct | null>();
 
   return product ? serializeProduct(product) : null;
@@ -146,9 +147,8 @@ export function serializeProduct(product: RawProduct): ProductRecord {
       _id: mainCategory._id.toString(),
       name: mainCategory.name,
       slug: mainCategory.slug,
-      parentCategoryId: mainCategory.parentCategoryId
-        ? mainCategory.parentCategoryId.toString()
-        : null
+      parentCategoryId: mainCategory.parentCategoryId ? mainCategory.parentCategoryId.toString() : null,
+      includeInAllListing: mainCategory.includeInAllListing ?? true
     },
     childCategory: childCategory
       ? {
@@ -157,7 +157,8 @@ export function serializeProduct(product: RawProduct): ProductRecord {
           slug: childCategory.slug,
           parentCategoryId: childCategory.parentCategoryId
             ? childCategory.parentCategoryId.toString()
-            : null
+            : null,
+          includeInAllListing: true
         }
       : null,
     category: {
@@ -166,7 +167,8 @@ export function serializeProduct(product: RawProduct): ProductRecord {
       slug: displayCategory.slug,
       parentCategoryId: displayCategory.parentCategoryId
         ? displayCategory.parentCategoryId.toString()
-        : null
+        : null,
+      includeInAllListing: displayCategory.includeInAllListing ?? true
     },
     createdAt: product.createdAt.toISOString(),
     updatedAt: product.updatedAt.toISOString()
@@ -177,9 +179,9 @@ export async function listProducts() {
   await connectToDatabase();
   const products = await ProductModel.find()
     .sort({ createdAt: -1 })
-    .populate("categoryId", "name slug parentCategoryId")
-    .populate("mainCategoryId", "name slug parentCategoryId")
-    .populate("childCategoryId", "name slug parentCategoryId")
+    .populate("categoryId", "name slug parentCategoryId includeInAllListing")
+    .populate("mainCategoryId", "name slug parentCategoryId includeInAllListing")
+    .populate("childCategoryId", "name slug parentCategoryId includeInAllListing")
     .lean<RawProduct[]>();
   return products.map(serializeProduct);
 }
@@ -188,9 +190,9 @@ export async function listPublishedProducts() {
   await connectToDatabase();
   const products = await ProductModel.find({ status: "published" })
     .sort({ createdAt: -1 })
-    .populate("categoryId", "name slug parentCategoryId")
-    .populate("mainCategoryId", "name slug parentCategoryId")
-    .populate("childCategoryId", "name slug parentCategoryId")
+    .populate("categoryId", "name slug parentCategoryId includeInAllListing")
+    .populate("mainCategoryId", "name slug parentCategoryId includeInAllListing")
+    .populate("childCategoryId", "name slug parentCategoryId includeInAllListing")
     .lean<RawProduct[]>();
   return products.map(serializeProduct);
 }
@@ -211,9 +213,9 @@ export async function getPublishedProductById(id: string) {
 
   await connectToDatabase();
   const product = await ProductModel.findOne({ _id: id, status: "published" })
-    .populate("categoryId", "name slug parentCategoryId")
-    .populate("mainCategoryId", "name slug parentCategoryId")
-    .populate("childCategoryId", "name slug parentCategoryId")
+    .populate("categoryId", "name slug parentCategoryId includeInAllListing")
+    .populate("mainCategoryId", "name slug parentCategoryId includeInAllListing")
+    .populate("childCategoryId", "name slug parentCategoryId includeInAllListing")
     .lean<RawProduct | null>();
   return product ? serializeProduct(product) : null;
 }

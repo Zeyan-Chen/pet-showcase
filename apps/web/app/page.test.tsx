@@ -5,7 +5,7 @@ import * as productsModule from "../lib/products";
 import HomePage from "./page";
 
 vi.mock("../components/storefront-shell", () => ({
-  StorefrontShell: ({ categoryNav, children }: { categoryNav?: any; children: any }) => (
+  StorefrontShell: ({ categoryNav, children }: { categoryNav?: React.ReactNode; children: React.ReactNode }) => (
     <div>
       {categoryNav}
       {children}
@@ -14,7 +14,13 @@ vi.mock("../components/storefront-shell", () => ({
 }));
 
 vi.mock("../components/category-nav", () => ({
-  CategoryNav: ({ categories, activeSlug }: { categories: Array<{ name: string }>; activeSlug?: string }) => (
+  CategoryNav: ({
+    categories,
+    activeSlug
+  }: {
+    categories: Array<{ name: string }>;
+    activeSlug?: string;
+  }) => (
     <div data-testid="category-nav">
       <span>{activeSlug ?? "all"}</span>
       {categories.map((category) => (
@@ -39,7 +45,7 @@ describe("HomePage", () => {
     render(view);
     expect(screen.getByText("守宮展示目錄")).toBeInTheDocument();
     expect(screen.getAllByText("全部守宮").length).toBeGreaterThan(0);
-    expect(screen.getByText("目前還沒有展示中的守宮")).toBeInTheDocument();
+    expect(screen.getByText("目前沒有展示中的守宮")).toBeInTheDocument();
   });
 
   it("renders child-category-aware published products", async () => {
@@ -49,6 +55,7 @@ describe("HomePage", () => {
         name: "Geckos",
         slug: "geckos",
         parentCategoryId: null,
+        includeInAllListing: true,
         createdAt: "2026-05-19T00:00:00.000Z",
         updatedAt: "2026-05-19T00:00:00.000Z",
         children: [
@@ -57,6 +64,7 @@ describe("HomePage", () => {
             name: "Leachianus",
             slug: "leachianus",
             parentCategoryId: "cat-1",
+            includeInAllListing: true,
             createdAt: "2026-05-19T00:00:00.000Z",
             updatedAt: "2026-05-19T00:00:00.000Z"
           }
@@ -77,19 +85,22 @@ describe("HomePage", () => {
           _id: "cat-1",
           name: "Geckos",
           slug: "geckos",
-          parentCategoryId: null
+          parentCategoryId: null,
+          includeInAllListing: true
         },
         childCategory: {
           _id: "cat-2",
           name: "Leachianus",
           slug: "leachianus",
-          parentCategoryId: "cat-1"
+          parentCategoryId: "cat-1",
+          includeInAllListing: true
         },
         category: {
           _id: "cat-2",
           name: "Leachianus",
           slug: "leachianus",
-          parentCategoryId: "cat-1"
+          parentCategoryId: "cat-1",
+          includeInAllListing: true
         },
         createdAt: "2026-05-19T00:00:00.000Z",
         updatedAt: "2026-05-19T00:00:00.000Z"
@@ -112,6 +123,7 @@ describe("HomePage", () => {
         name: "Geckos",
         slug: "geckos",
         parentCategoryId: null,
+        includeInAllListing: true,
         createdAt: "2026-05-19T00:00:00.000Z",
         updatedAt: "2026-05-19T00:00:00.000Z",
         children: []
@@ -128,5 +140,29 @@ describe("HomePage", () => {
     render(view);
     expect(getPublishedProductsSpy).toHaveBeenCalledWith("geckos");
     expect(screen.getAllByText("Geckos").length).toBeGreaterThan(0);
+  });
+
+  it("does not show products from main categories excluded from the all listing", async () => {
+    vi.spyOn(categoriesModule, "getCategories").mockResolvedValueOnce([
+      {
+        _id: "main-hidden",
+        name: "周邊用品",
+        slug: "周邊用品",
+        parentCategoryId: null,
+        includeInAllListing: false,
+        createdAt: "2026-05-25T00:00:00.000Z",
+        updatedAt: "2026-05-25T00:00:00.000Z",
+        children: []
+      }
+    ]);
+    vi.spyOn(productsModule, "getPublishedProducts").mockResolvedValueOnce([]);
+
+    const view = await HomePage({
+      searchParams: Promise.resolve({})
+    });
+
+    render(view);
+    expect(screen.queryByText("守宮飼養箱")).not.toBeInTheDocument();
+    expect(screen.getByText("目前沒有展示中的守宮")).toBeInTheDocument();
   });
 });

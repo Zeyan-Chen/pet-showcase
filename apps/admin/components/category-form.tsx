@@ -14,13 +14,16 @@ export function CategoryForm({
 }) {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [parentCategoryId, setParentCategoryId] = useState<string>("");
+  const [parentCategoryId, setParentCategoryId] = useState("");
+  const [includeInAllListing, setIncludeInAllListing] = useState(true);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const mainCategories = useMemo(
     () => categories.filter((category) => category.parentCategoryId === null),
     [categories]
   );
+  const isTopLevel = parentCategoryId.length === 0;
 
   async function handleSubmit(formData: FormData) {
     setError("");
@@ -33,7 +36,8 @@ export function CategoryForm({
       },
       body: JSON.stringify({
         name: String(formData.get("name") ?? ""),
-        parentCategoryId: String(formData.get("parentCategoryId") ?? "") || null
+        parentCategoryId: String(formData.get("parentCategoryId") ?? "") || null,
+        includeInAllListing: isTopLevel ? includeInAllListing : true
       })
     });
 
@@ -41,12 +45,13 @@ export function CategoryForm({
 
     if (!response.ok) {
       const payload = (await response.json().catch(() => null)) as { message?: string } | null;
-      setError(payload?.message ?? "新增分類失敗，請稍後再試。");
+      setError(payload?.message ?? "新增分類時發生問題，請稍後再試。");
       return;
     }
 
     setName("");
     setParentCategoryId("");
+    setIncludeInAllListing(true);
     startTransition(() => {
       router.refresh();
     });
@@ -61,7 +66,7 @@ export function CategoryForm({
           </p>
           <h2 className="text-2xl font-semibold text-[var(--admin-ink)]">新增主分類或細項</h2>
           <p className="text-sm leading-6 text-[var(--admin-muted)]">
-            不選上層分類時會建立主分類；選了上層分類後，會建立該主分類底下的細項。
+            不選上層主分類時會建立主分類；選了上層主分類後，會建立該主分類底下的細項。
           </p>
         </div>
 
@@ -111,6 +116,23 @@ export function CategoryForm({
             />
           </div>
 
+          {isTopLevel ? (
+            <label className="flex items-center justify-between gap-4 rounded-[1.25rem] border border-[var(--admin-border)] bg-white px-4 py-3">
+              <div className="space-y-1">
+                <p className="text-sm font-semibold text-[var(--admin-ink)]">納入全部展示</p>
+                <p className="text-xs leading-5 text-[var(--admin-muted)]">
+                  關閉後，這個主分類與其底下細項的商品不會出現在前台「全部」頁。
+                </p>
+              </div>
+              <input
+                type="checkbox"
+                checked={includeInAllListing}
+                onChange={(event) => setIncludeInAllListing(event.target.checked)}
+                className="h-5 w-5 shrink-0 accent-[var(--admin-brand-strong)]"
+              />
+            </label>
+          ) : null}
+
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
           <Button
@@ -118,7 +140,7 @@ export function CategoryForm({
             disabled={isSubmitting || !name.trim()}
             className="w-full bg-[var(--admin-ink)] text-white hover:bg-[var(--admin-brand-strong)]"
           >
-            {isSubmitting ? "新增中..." : "新增分類"}
+            {isSubmitting ? "新增分類中..." : "新增分類"}
           </Button>
         </form>
       </div>

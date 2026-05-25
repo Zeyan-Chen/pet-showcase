@@ -17,9 +17,9 @@ export type ProductInput = z.infer<typeof productInputSchema>;
 
 export type ProductRecord = ProductInput & {
   _id: string;
-  mainCategory: Pick<CategoryRecord, "_id" | "name" | "slug" | "parentCategoryId">;
-  childCategory: Pick<CategoryRecord, "_id" | "name" | "slug" | "parentCategoryId"> | null;
-  category: Pick<CategoryRecord, "_id" | "name" | "slug" | "parentCategoryId">;
+  mainCategory: Pick<CategoryRecord, "_id" | "name" | "slug" | "parentCategoryId" | "includeInAllListing">;
+  childCategory: Pick<CategoryRecord, "_id" | "name" | "slug" | "parentCategoryId" | "includeInAllListing"> | null;
+  category: Pick<CategoryRecord, "_id" | "name" | "slug" | "parentCategoryId" | "includeInAllListing">;
   createdAt: string;
   updatedAt: string;
 };

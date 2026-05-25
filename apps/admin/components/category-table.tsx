@@ -17,10 +17,19 @@ function getErrorMessage(fallback: string, payload: unknown) {
   return fallback;
 }
 
+function getCategoryStatus(category: CategoryRecord) {
+  if (category.parentCategoryId) {
+    return "跟隨主分類";
+  }
+
+  return category.includeInAllListing ? "納入全部展示" : "不納入全部展示";
+}
+
 export function CategoryTable({ categories }: { categories: CategoryRecord[] }) {
   const router = useRouter();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draftName, setDraftName] = useState("");
+  const [draftIncludeInAllListing, setDraftIncludeInAllListing] = useState(true);
   const [error, setError] = useState("");
   const [pendingId, setPendingId] = useState<string | null>(null);
 
@@ -48,7 +57,8 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
       },
       body: JSON.stringify({
         name: draftName,
-        parentCategoryId: category.parentCategoryId
+        parentCategoryId: category.parentCategoryId,
+        includeInAllListing: category.parentCategoryId ? true : draftIncludeInAllListing
       })
     });
 
@@ -56,12 +66,13 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
     setPendingId(null);
 
     if (!response.ok) {
-      setError(getErrorMessage("更新分類失敗，請稍後再試。", payload));
+      setError(getErrorMessage("更新分類時發生問題，請稍後再試。", payload));
       return;
     }
 
     setEditingId(null);
     setDraftName("");
+    setDraftIncludeInAllListing(true);
     startTransition(() => {
       router.refresh();
     });
@@ -85,13 +96,14 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
     setPendingId(null);
 
     if (!response.ok) {
-      setError(getErrorMessage("刪除分類失敗，請稍後再試。", payload));
+      setError(getErrorMessage("刪除分類時發生問題，請稍後再試。", payload));
       return;
     }
 
     if (editingId === id) {
       setEditingId(null);
       setDraftName("");
+      setDraftIncludeInAllListing(true);
     }
 
     startTransition(() => {
@@ -102,6 +114,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
   function renderCategoryRow(category: CategoryRecord, depth: "main" | "child") {
     const isEditing = editingId === category._id;
     const isPending = pendingId === category._id;
+    const isTopLevel = depth === "main";
 
     return (
       <div
@@ -123,6 +136,22 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
                   maxLength={80}
                   autoFocus
                 />
+                {isTopLevel ? (
+                  <label className="flex items-center justify-between gap-4 rounded-[1rem] border border-[var(--admin-border)] bg-white px-4 py-3">
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold text-[var(--admin-ink)]">納入全部展示</p>
+                      <p className="text-xs text-[var(--admin-muted)]">
+                        關閉後，這個主分類與其細項商品會從前台「全部」頁移除。
+                      </p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={draftIncludeInAllListing}
+                      onChange={(event) => setDraftIncludeInAllListing(event.target.checked)}
+                      className="h-5 w-5 shrink-0 accent-[var(--admin-brand-strong)]"
+                    />
+                  </label>
+                ) : null}
                 <div className="flex flex-wrap gap-2">
                   <Button
                     type="button"
@@ -130,7 +159,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
                     onClick={() => handleRename(category)}
                     className="bg-[var(--admin-ink)] text-white hover:bg-[var(--admin-brand-strong)]"
                   >
-                    {isPending ? "儲存中..." : "儲存名稱"}
+                    {isPending ? "儲存中..." : "儲存變更"}
                   </Button>
                   <button
                     type="button"
@@ -138,6 +167,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
                     onClick={() => {
                       setEditingId(null);
                       setDraftName("");
+                      setDraftIncludeInAllListing(true);
                       setError("");
                     }}
                   >
@@ -151,6 +181,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
                   {category.name}
                 </h3>
                 <p className="text-sm text-[var(--admin-muted)]">Slug：{category.slug}</p>
+                <p className="text-sm text-[var(--admin-muted)]">{getCategoryStatus(category)}</p>
               </>
             )}
           </div>
@@ -163,6 +194,7 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
                 onClick={() => {
                   setEditingId(category._id);
                   setDraftName(category.name);
+                  setDraftIncludeInAllListing(category.includeInAllListing);
                   setError("");
                 }}
               >
@@ -186,9 +218,9 @@ export function CategoryTable({ categories }: { categories: CategoryRecord[] }) 
   if (categories.length === 0) {
     return (
       <Card className="border border-dashed border-[var(--admin-border)] bg-[var(--admin-card)] p-8 text-center shadow-none">
-        <p className="text-base font-semibold text-[var(--admin-ink)]">目前還沒有分類</p>
+        <p className="text-base font-semibold text-[var(--admin-ink)]">目前還沒有任何分類</p>
         <p className="mt-2 text-sm leading-6 text-[var(--admin-muted)]">
-          先建立主分類，之後再依需要往下新增細項。
+          先建立主分類或細項分類，之後新增商品時就能直接套用。
         </p>
       </Card>
     );
