@@ -19,6 +19,7 @@ describe("getPublishedProducts", () => {
           imageUrl: "https://example.com/crestie.jpg",
           description: "visible",
           status: "published",
+          isSoldOut: false,
           mainCategoryId: "main-1",
           childCategoryId: null,
           mainCategory: {
@@ -46,6 +47,7 @@ describe("getPublishedProducts", () => {
           imageUrl: "https://example.com/box.jpg",
           description: "hidden",
           status: "published",
+          isSoldOut: false,
           mainCategoryId: "main-2",
           childCategoryId: null,
           mainCategory: {

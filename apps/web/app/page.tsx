@@ -86,7 +86,7 @@ export default async function HomePage({
     <StorefrontShell categoryNav={<CategoryNav categories={categories} activeSlug={activeSlug} />}>
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <section className="space-y-4">
-          <header className="rounded-[2rem] border border-[#d8cdbf] bg-[linear-gradient(180deg,rgba(248,244,236,0.98),rgba(240,232,220,0.98))] p-5 text-[var(--store-ink)] shadow-[0_24px_56px_rgba(9,22,39,0.22)] sm:p-6">
+          <header className="rounded-[2rem] border border-[#d8cdbf] bg-white p-5 text-[var(--store-ink)] shadow-[0_24px_56px_rgba(9,22,39,0.16)] sm:p-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div className="space-y-2">
                 <p className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[#6f655c]">
@@ -96,11 +96,11 @@ export default async function HomePage({
                 <p className="max-w-2xl text-sm leading-7 text-[#5f5851]">{browseDescription}</p>
               </div>
               <div className="grid grid-cols-2 gap-3 sm:w-auto">
-                <div className="rounded-[1.4rem] bg-[#efe7da] px-4 py-3 text-[var(--store-ink)] shadow-[inset_0_0_0_1px_rgba(120,105,90,0.08)]">
+                <div className="rounded-[1.4rem] bg-white px-4 py-3 text-[var(--store-ink)] shadow-[inset_0_0_0_1px_rgba(120,105,90,0.08)]">
                   <p className="text-[0.64rem] uppercase tracking-[0.22em] text-[#6f655c]">已展示個體</p>
                   <p className="mt-2 text-2xl font-semibold">{products.length}</p>
                 </div>
-                <div className="rounded-[1.4rem] bg-[#efe7da] px-4 py-3 text-[var(--store-ink)] shadow-[inset_0_0_0_1px_rgba(120,105,90,0.08)]">
+                <div className="rounded-[1.4rem] bg-white px-4 py-3 text-[var(--store-ink)] shadow-[inset_0_0_0_1px_rgba(120,105,90,0.08)]">
                   <p className="text-[0.64rem] uppercase tracking-[0.22em] text-[#6f655c]">主分類數量</p>
                   <p className="mt-2 text-2xl font-semibold">{Math.max(categories.length, 1)}</p>
                 </div>

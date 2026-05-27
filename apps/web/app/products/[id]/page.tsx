@@ -28,7 +28,7 @@ export default async function ProductDetailPage({
   return (
     <StorefrontShell categoryNav={<CategoryNav categories={categories} activeSlug={activeSlug} />}>
       <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-        <div className="mb-6 rounded-[2rem] border border-[#d8cdbf] bg-[linear-gradient(180deg,rgba(248,244,236,0.98),rgba(240,232,220,0.98))] p-5 text-[var(--store-ink)] shadow-[0_24px_56px_rgba(16,38,63,0.16)] sm:p-6">
+        <div className="mb-6 rounded-[2rem] border border-[#d8cdbf] bg-white p-5 text-[var(--store-ink)] shadow-[0_24px_56px_rgba(16,38,63,0.16)] sm:p-6">
           <div className="space-y-3">
             <Link
               href={`/?category=${activeSlug}`}
@@ -41,19 +41,26 @@ export default async function ProductDetailPage({
                 ? `${product.mainCategory.name} / ${product.childCategory.name}`
                 : product.mainCategory.name}
             </p>
-            <h1 className="text-3xl font-semibold sm:text-4xl">{product.name}</h1>
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-3xl font-semibold sm:text-4xl">{product.name}</h1>
+              {product.isSoldOut ? (
+                <span className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold tracking-[0.02em] text-[#201d1a] shadow-[0_12px_28px_rgba(0,0,0,0.08)]">
+                  售罄
+                </span>
+              ) : null}
+            </div>
             <p className="max-w-3xl text-sm leading-7 text-[#5f5851] sm:text-base">
               這裡整理這隻守宮的基本展示資訊，方便你快速查看品系、價格與個體說明。
             </p>
           </div>
         </div>
         <div className="grid gap-6 lg:grid-cols-[1.08fr,0.92fr] lg:items-start">
-          <section className="overflow-hidden rounded-[2rem] border border-[#d8cdbf] bg-[#f6efe5] shadow-[0_26px_56px_rgba(16,38,63,0.14)]">
+          <section className="overflow-hidden rounded-[2rem] border border-[#d8cdbf] bg-white shadow-[0_26px_56px_rgba(16,38,63,0.14)]">
             <div className="relative aspect-[4/5]">
               <Image src={product.imageUrl} alt={product.name} fill className="object-cover" />
             </div>
           </section>
-          <section className="rounded-[2rem] border border-[#d8cdbf] bg-[linear-gradient(180deg,#fffaf3,#ece2d3)] p-6 text-[#1f1a17] shadow-[0_26px_56px_rgba(16,38,63,0.14)] sm:p-8">
+          <section className="rounded-[2rem] border border-[#d8cdbf] bg-white p-6 text-[#1f1a17] shadow-[0_26px_56px_rgba(16,38,63,0.14)] sm:p-8">
             <div className="space-y-5">
               <div className="space-y-3 border-b border-[#d8cdbf] pb-5">
                 <p className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-[#214b7a]">
@@ -67,6 +74,9 @@ export default async function ProductDetailPage({
                 <p className="text-2xl font-semibold text-[#17385d]">
                   NT$ {currencyFormatter.format(product.price)}
                 </p>
+                {product.isSoldOut ? (
+                  <p className="text-sm font-medium text-[#6b5143]">目前狀態：已售罄，暫不提供點擊購買。</p>
+                ) : null}
               </div>
               <div className="space-y-3">
                 <h2 className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-[#6d6359]">
@@ -74,7 +84,7 @@ export default async function ProductDetailPage({
                 </h2>
                 <p className="text-sm leading-7 text-[#4f4943] sm:text-base">{product.description}</p>
               </div>
-              <div className="rounded-[1.5rem] border border-[#d8cdbf] bg-[#f7f2e9] p-4 text-sm leading-7 text-[#625a53]">
+              <div className="rounded-[1.5rem] border border-[#d8cdbf] bg-white p-4 text-sm leading-7 text-[#625a53]">
                 如需了解更多飼養資訊或想確認個體狀況，可以再透過後續聯繫方式進一步詢問。
               </div>
             </div>

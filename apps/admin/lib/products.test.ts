@@ -10,6 +10,7 @@ describe("serializeProduct", () => {
       imageUrl: "https://example.com/milo.jpg",
       description: "Friendly pet",
       status: "published",
+      isSoldOut: true,
       categoryId: "cat1",
       mainCategoryId: "cat1",
       childCategoryId: "child1",
@@ -33,6 +34,7 @@ describe("serializeProduct", () => {
 
     expect(result._id).toBe("abc123");
     expect(result.status).toBe("published");
+    expect(result.isSoldOut).toBe(true);
     expect(result.category.name).toBe("Leachianus");
     expect(result.mainCategoryId).toBe("cat1");
     expect(result.childCategoryId).toBe("child1");

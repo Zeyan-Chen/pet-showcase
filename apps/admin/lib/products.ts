@@ -19,6 +19,7 @@ type RawProduct = {
   imageUrl: string;
   description: string;
   status: "draft" | "published";
+  isSoldOut?: boolean;
   categoryId?: Types.ObjectId | string | RawCategory | null;
   mainCategoryId?: Types.ObjectId | string | RawCategory | null;
   childCategoryId?: Types.ObjectId | string | RawCategory | null;
@@ -141,6 +142,7 @@ export function serializeProduct(product: RawProduct): ProductRecord {
     imageUrl: product.imageUrl,
     description: product.description,
     status: product.status,
+    isSoldOut: product.isSoldOut ?? false,
     mainCategoryId: mainCategoryId?.toString() ?? "",
     childCategoryId: childCategoryId ? childCategoryId.toString() : null,
     mainCategory: {

@@ -9,6 +9,7 @@ export const productInputSchema = z.object({
   imageUrl: z.string().url(),
   description: z.string().min(1).max(2000),
   status: productStatusSchema,
+  isSoldOut: z.boolean().optional().default(false),
   mainCategoryId: z.string().min(1),
   childCategoryId: z.string().min(1).nullable().optional().default(null)
 });

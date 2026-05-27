@@ -32,4 +32,18 @@ describe("productInputSchema", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("defaults isSoldOut to false", () => {
+    const result = productInputSchema.parse({
+      name: "Milo",
+      price: 1200,
+      imageUrl: "https://example.com/milo.jpg",
+      description: "Friendly pet",
+      status: "draft",
+      mainCategoryId: "main-1",
+      childCategoryId: null
+    });
+
+    expect(result.isSoldOut).toBe(false);
+  });
 });

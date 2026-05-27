@@ -79,6 +79,7 @@ describe("HomePage", () => {
         imageUrl: "https://example.com/milo.jpg",
         description: "Friendly pet",
         status: "published",
+        isSoldOut: false,
         mainCategoryId: "cat-1",
         childCategoryId: "cat-2",
         mainCategory: {

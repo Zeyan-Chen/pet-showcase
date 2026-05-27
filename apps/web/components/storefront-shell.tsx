@@ -22,7 +22,7 @@ export async function StorefrontShell({
   return (
     <div className="min-h-screen bg-[var(--store-bg)] text-[var(--store-text)]">
       <AnnouncementBar announcements={announcements} />
-      <header className="border-b border-[#d4c7b7]/80 bg-[rgba(244,239,230,0.98)] text-[var(--store-ink)] shadow-[0_16px_40px_rgba(16,38,63,0.16)]">
+      <header className="border-b border-[#d4c7b7]/80 bg-[rgba(255,255,255,0.98)] text-[var(--store-ink)] shadow-[0_16px_40px_rgba(16,38,63,0.16)]">
         <div className="store-header-shell mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="store-header-brand-row py-4 sm:py-5">
             <div className="store-header-brand-slot">

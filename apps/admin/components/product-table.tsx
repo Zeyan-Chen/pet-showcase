@@ -44,6 +44,13 @@ export function ProductTable({ products }: { products: ProductRecord[] }) {
                   >
                     {product.status === "published" ? "已發布" : "草稿"}
                   </span>
+                  <span
+                    className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-[0.18em] ${
+                      product.isSoldOut ? "bg-stone-900 text-white" : "bg-stone-100 text-stone-600"
+                    }`}
+                  >
+                    {product.isSoldOut ? "售罄" : "未售罄"}
+                  </span>
                 </div>
                 <div>
                   <h2 className="truncate text-lg font-semibold text-[var(--admin-ink)]">

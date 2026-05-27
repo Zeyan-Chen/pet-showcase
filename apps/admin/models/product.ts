@@ -12,6 +12,11 @@ const productSchema = new Schema(
       required: true,
       default: "draft"
     },
+    isSoldOut: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
     categoryId: {
       type: Schema.Types.ObjectId,
       ref: "Category",

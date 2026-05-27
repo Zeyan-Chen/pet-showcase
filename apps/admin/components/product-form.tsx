@@ -57,6 +57,7 @@ export function ProductForm({
       imageUrl,
       description: String(formData.get("description") ?? ""),
       status: String(formData.get("status") ?? "draft"),
+      isSoldOut: formData.get("isSoldOut") === "on",
       mainCategoryId,
       childCategoryId
     };
@@ -174,6 +175,21 @@ export function ProductForm({
                 </select>
               </div>
             </div>
+
+            <label className="flex items-start gap-3 rounded-[1.25rem] border border-[var(--admin-border)] bg-[var(--admin-surface-2)] px-4 py-3">
+              <input
+                type="checkbox"
+                name="isSoldOut"
+                defaultChecked={initialValue?.isSoldOut ?? false}
+                className="mt-1 h-4 w-4 rounded border-[var(--admin-border)] text-[var(--admin-brand-strong)] focus:ring-[var(--admin-brand-strong)]"
+              />
+              <span className="space-y-1">
+                <span className="block text-sm font-semibold text-[var(--admin-ink)]">售罄狀態</span>
+                <span className="block text-sm leading-6 text-[var(--admin-muted)]">
+                  勾選後商品仍會顯示在前台，但卡片會加上售罄標籤並停用點擊。
+                </span>
+              </span>
+            </label>
 
             <div className="space-y-2">
               <label
