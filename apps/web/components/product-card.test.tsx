@@ -26,6 +26,7 @@ const baseProduct = {
   name: "Rookie Gecko 001",
   price: 2500,
   imageUrl: "https://example.com/gecko.jpg",
+  imageUrls: [],
   description: "Friendly gecko",
   status: "published" as const,
   isSoldOut: false,
@@ -65,5 +66,25 @@ describe("ProductCard", () => {
 
     expect(screen.getByText("售罄")).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /rookie gecko 001/i })).not.toBeInTheDocument();
+  });
+
+  it("prefers the first image in imageUrls", () => {
+    render(
+      <ProductCard
+        product={{
+          ...baseProduct,
+          imageUrl: "https://example.com/fallback.jpg",
+          imageUrls: [
+            "https://example.com/primary.jpg",
+            "https://example.com/secondary.jpg"
+          ]
+        }}
+      />
+    );
+
+    expect(screen.getByRole("img", { name: /rookie gecko 001/i })).toHaveAttribute(
+      "src",
+      expect.stringContaining("primary.jpg")
+    );
   });
 });

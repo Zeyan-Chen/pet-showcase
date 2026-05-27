@@ -7,6 +7,7 @@ export const productInputSchema = z.object({
   name: z.string().min(1).max(80),
   price: z.coerce.number().min(0),
   imageUrl: z.string().url(),
+  imageUrls: z.array(z.string().url()).optional().default([]),
   description: z.string().min(1).max(2000),
   status: productStatusSchema,
   isSoldOut: z.boolean().optional().default(false),

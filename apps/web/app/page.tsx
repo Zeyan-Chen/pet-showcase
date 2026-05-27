@@ -1,4 +1,4 @@
-import type { CategoryRecord, CategoryTreeRecord } from "@pet-showcase/shared";
+import type { CategoryTreeRecord } from "@pet-showcase/shared";
 import { CategoryNav } from "../components/category-nav";
 import { ProductList } from "../components/product-list";
 import { StorefrontShell } from "../components/storefront-shell";
@@ -35,38 +35,6 @@ function findCategoryContext(categories: CategoryTreeRecord[], activeSlug?: stri
   return { activeMainCategory: null, activeChildCategory: null };
 }
 
-function getBrowseTitle(activeMainCategory: CategoryTreeRecord | null, activeChildCategory: CategoryRecord | null) {
-  if (activeChildCategory) {
-    return activeChildCategory.name;
-  }
-
-  if (activeMainCategory) {
-    return activeMainCategory.name;
-  }
-
-  return "全部守宮";
-}
-
-function getBrowseDescription(
-  activeMainCategory: CategoryTreeRecord | null,
-  activeChildCategory: CategoryRecord | null,
-  activeSlug?: string
-) {
-  if (activeChildCategory && activeMainCategory) {
-    return `目前顯示 ${activeMainCategory.name} 底下的 ${activeChildCategory.name} 個體。`;
-  }
-
-  if (activeMainCategory) {
-    return `以 ${activeMainCategory.name} 為主分類整理目前展示與在售的相關個體。`;
-  }
-
-  if (activeSlug) {
-    return "目前找不到這個分類，請切換到其他分類看看。";
-  }
-
-  return "以品種與主分類整理目前展示與在售的守宮個體，方便你快速找到想看的方向。";
-}
-
 export default async function HomePage({
   searchParams
 }: {
@@ -79,57 +47,32 @@ export default async function HomePage({
     getPublishedProducts(activeSlug)
   ]);
   const { activeMainCategory, activeChildCategory } = findCategoryContext(categories, activeSlug);
-  const browseTitle = getBrowseTitle(activeMainCategory, activeChildCategory);
-  const browseDescription = getBrowseDescription(activeMainCategory, activeChildCategory, activeSlug);
 
   return (
     <StorefrontShell categoryNav={<CategoryNav categories={categories} activeSlug={activeSlug} />}>
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-        <section className="space-y-4">
-          <header className="rounded-[2rem] border border-[#d8cdbf] bg-white p-5 text-[var(--store-ink)] shadow-[0_24px_56px_rgba(9,22,39,0.16)] sm:p-6">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <div className="space-y-2">
-                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[#6f655c]">
-                  守宮展示目錄
-                </p>
-                <h1 className="text-2xl font-semibold sm:text-3xl">{browseTitle}</h1>
-                <p className="max-w-2xl text-sm leading-7 text-[#5f5851]">{browseDescription}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-3 sm:w-auto">
-                <div className="rounded-[1.4rem] bg-white px-4 py-3 text-[var(--store-ink)] shadow-[inset_0_0_0_1px_rgba(120,105,90,0.08)]">
-                  <p className="text-[0.64rem] uppercase tracking-[0.22em] text-[#6f655c]">已展示個體</p>
-                  <p className="mt-2 text-2xl font-semibold">{products.length}</p>
-                </div>
-                <div className="rounded-[1.4rem] bg-white px-4 py-3 text-[var(--store-ink)] shadow-[inset_0_0_0_1px_rgba(120,105,90,0.08)]">
-                  <p className="text-[0.64rem] uppercase tracking-[0.22em] text-[#6f655c]">主分類數量</p>
-                  <p className="mt-2 text-2xl font-semibold">{Math.max(categories.length, 1)}</p>
-                </div>
-              </div>
-            </div>
-          </header>
-          {products.length === 0 ? (
-            <section className="rounded-[2rem] border border-white/10 bg-[rgba(18,38,63,0.52)] p-8 text-center shadow-[0_24px_40px_rgba(0,0,0,0.28)]">
-              <h2 className="text-xl font-semibold text-white">
-                {activeChildCategory
-                  ? `${activeChildCategory.name} 目前沒有展示中的個體`
-                  : activeMainCategory
-                    ? `${activeMainCategory.name} 目前沒有展示中的個體`
-                    : activeSlug
-                      ? "目前找不到這個分類"
-                      : "目前沒有展示中的守宮"}
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-[#d6ccbe]">
-                {activeChildCategory || activeMainCategory
-                  ? "你可以先切換到其他主分類或細項，看看目前上架中的守宮個體。"
+        {products.length === 0 ? (
+          <section className="rounded-[2rem] border border-white/10 bg-[rgba(18,38,63,0.52)] p-8 text-center shadow-[0_24px_40px_rgba(0,0,0,0.28)]">
+            <h2 className="text-xl font-semibold text-white">
+              {activeChildCategory
+                ? `${activeChildCategory.name} 目前沒有展示個體`
+                : activeMainCategory
+                  ? `${activeMainCategory.name} 目前沒有展示個體`
                   : activeSlug
-                    ? "這個分類可能尚未建立，或目前沒有任何已發布商品。"
-                    : "之後新增已發布商品後，這裡就會開始顯示守宮個體。"}
-              </p>
-            </section>
-          ) : (
-            <ProductList products={products} />
-          )}
-        </section>
+                    ? "目前沒有符合條件的商品"
+                    : "目前沒有展示中的守宮"}
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-[#d6ccbe]">
+              {activeChildCategory || activeMainCategory
+                ? "之後如果有上架新的個體，會在這個分類底下直接顯示。"
+                : activeSlug
+                  ? "你可以切換其他分類，或稍後再回來看看新上架的商品。"
+                  : "等你把商品設為已發布之後，這裡就會開始顯示守宮卡片。"}
+            </p>
+          </section>
+        ) : (
+          <ProductList products={products} />
+        )}
       </main>
     </StorefrontShell>
   );

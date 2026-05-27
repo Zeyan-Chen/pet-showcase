@@ -17,6 +17,7 @@ type RawProduct = {
   name: string;
   price: number;
   imageUrl: string;
+  imageUrls?: string[];
   description: string;
   status: "draft" | "published";
   isSoldOut?: boolean;
@@ -125,6 +126,12 @@ async function assertCategorySelection(mainCategoryId: string, childCategoryId?:
 }
 
 export function serializeProduct(product: RawProduct): ProductRecord {
+  const effectiveImageUrls =
+    product.imageUrls && product.imageUrls.length > 0
+      ? product.imageUrls
+      : product.imageUrl
+        ? [product.imageUrl]
+        : [];
   const mainCategory = getMainCategory(product);
   const childCategory = getChildCategory(product);
   const displayCategory = childCategory ?? mainCategory;
@@ -139,7 +146,8 @@ export function serializeProduct(product: RawProduct): ProductRecord {
     _id: product._id.toString(),
     name: product.name,
     price: product.price,
-    imageUrl: product.imageUrl,
+    imageUrl: effectiveImageUrls[0] ?? product.imageUrl,
+    imageUrls: effectiveImageUrls,
     description: product.description,
     status: product.status,
     isSoldOut: product.isSoldOut ?? false,
@@ -224,12 +232,21 @@ export async function getPublishedProductById(id: string) {
 
 export async function createProduct(input: ProductInput) {
   await connectToDatabase();
+  const effectiveImageUrls =
+    input.imageUrls && input.imageUrls.length > 0
+      ? input.imageUrls
+      : input.imageUrl
+        ? [input.imageUrl]
+        : [];
+  const imageUrl = effectiveImageUrls[0] ?? input.imageUrl;
   const categorySelection = await assertCategorySelection(
     input.mainCategoryId,
     input.childCategoryId
   );
   const product = await ProductModel.create({
     ...input,
+    imageUrl,
+    imageUrls: effectiveImageUrls,
     categoryId: categorySelection.mainCategoryId,
     mainCategoryId: categorySelection.mainCategoryId,
     childCategoryId: categorySelection.childCategoryId
@@ -249,6 +266,13 @@ export async function updateProduct(id: string, input: ProductInput) {
   }
 
   await connectToDatabase();
+  const effectiveImageUrls =
+    input.imageUrls && input.imageUrls.length > 0
+      ? input.imageUrls
+      : input.imageUrl
+        ? [input.imageUrl]
+        : [];
+  const imageUrl = effectiveImageUrls[0] ?? input.imageUrl;
   const categorySelection = await assertCategorySelection(
     input.mainCategoryId,
     input.childCategoryId
@@ -257,6 +281,8 @@ export async function updateProduct(id: string, input: ProductInput) {
     id,
     {
       ...input,
+      imageUrl,
+      imageUrls: effectiveImageUrls,
       categoryId: categorySelection.mainCategoryId,
       mainCategoryId: categorySelection.mainCategoryId,
       childCategoryId: categorySelection.childCategoryId

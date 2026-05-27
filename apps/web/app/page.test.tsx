@@ -43,8 +43,7 @@ describe("HomePage", () => {
     });
 
     render(view);
-    expect(screen.getByText("守宮展示目錄")).toBeInTheDocument();
-    expect(screen.getAllByText("全部守宮").length).toBeGreaterThan(0);
+    expect(screen.getByTestId("category-nav")).toBeInTheDocument();
     expect(screen.getByText("目前沒有展示中的守宮")).toBeInTheDocument();
   });
 
@@ -77,6 +76,7 @@ describe("HomePage", () => {
         name: "Milo",
         price: 1200,
         imageUrl: "https://example.com/milo.jpg",
+        imageUrls: [],
         description: "Friendly pet",
         status: "published",
         isSoldOut: false,
@@ -147,8 +147,8 @@ describe("HomePage", () => {
     vi.spyOn(categoriesModule, "getCategories").mockResolvedValueOnce([
       {
         _id: "main-hidden",
-        name: "周邊用品",
-        slug: "周邊用品",
+        name: "Hidden Main Test",
+        slug: "hidden-main-test",
         parentCategoryId: null,
         includeInAllListing: false,
         createdAt: "2026-05-25T00:00:00.000Z",
@@ -163,7 +163,7 @@ describe("HomePage", () => {
     });
 
     render(view);
-    expect(screen.queryByText("守宮飼養箱")).not.toBeInTheDocument();
+    expect(screen.queryByText("全部守宮")).not.toBeInTheDocument();
     expect(screen.getByText("目前沒有展示中的守宮")).toBeInTheDocument();
   });
 });

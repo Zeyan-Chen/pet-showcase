@@ -24,6 +24,12 @@ export default async function ProductDetailPage({
 
   const activeSlug = product.childCategory?.slug ?? product.mainCategory.slug;
   const backLabel = product.childCategory?.name ?? product.mainCategory.name;
+  const productImages =
+    product.imageUrls && product.imageUrls.length > 0
+      ? product.imageUrls
+      : product.imageUrl
+        ? [product.imageUrl]
+        : [];
 
   return (
     <StorefrontShell categoryNav={<CategoryNav categories={categories} activeSlug={activeSlug} />}>
@@ -54,11 +60,29 @@ export default async function ProductDetailPage({
             </p>
           </div>
         </div>
-        <div className="grid gap-6 lg:grid-cols-[1.08fr,0.92fr] lg:items-start">
-          <section className="overflow-hidden rounded-[2rem] border border-[#d8cdbf] bg-white shadow-[0_26px_56px_rgba(16,38,63,0.14)]">
-            <div className="relative aspect-[4/5]">
-              <Image src={product.imageUrl} alt={product.name} fill className="object-cover" />
-            </div>
+        <div className="grid gap-6 lg:grid-cols-[1.02fr,0.98fr] lg:items-start">
+          <section className="space-y-4 rounded-[2rem] border border-[#d8cdbf] bg-white p-4 shadow-[0_26px_56px_rgba(16,38,63,0.14)]">
+            {productImages.length > 0 ? (
+              productImages.map((imageUrl, index) => (
+                <div
+                  key={`${imageUrl}-${index}`}
+                  className="relative overflow-hidden rounded-[1.5rem] border border-[#e6ddd1] bg-[#f8f5ef]"
+                >
+                  <div className="relative aspect-[16/10]">
+                    <Image
+                      src={imageUrl}
+                      alt={`${product.name} 圖片 ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-[1.5rem] border border-dashed border-[#d8cdbf] p-8 text-center text-sm text-[#6d6359]">
+                目前沒有可顯示的商品圖片。
+              </div>
+            )}
           </section>
           <section className="rounded-[2rem] border border-[#d8cdbf] bg-white p-6 text-[#1f1a17] shadow-[0_26px_56px_rgba(16,38,63,0.14)] sm:p-8">
             <div className="space-y-5">

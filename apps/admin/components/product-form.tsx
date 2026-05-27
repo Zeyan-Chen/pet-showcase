@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import type { CategoryRecord, ProductRecord } from "@pet-showcase/shared";
 import { Button, Card, Input, Textarea } from "@pet-showcase/ui";
@@ -17,7 +18,13 @@ export function ProductForm({
   title: string;
   categories: CategoryRecord[];
 }) {
-  const [imageUrl, setImageUrl] = useState(initialValue?.imageUrl ?? "");
+  const [imageUrls, setImageUrls] = useState(
+    initialValue?.imageUrls && initialValue.imageUrls.length > 0
+      ? initialValue.imageUrls
+      : initialValue?.imageUrl
+        ? [initialValue.imageUrl]
+        : []
+  );
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedMainCategoryId, setSelectedMainCategoryId] = useState(
@@ -37,8 +44,10 @@ export function ProductForm({
   );
   const hasMainCategories = mainCategories.length > 0;
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     setError("");
+    const formData = new FormData(event.currentTarget);
 
     const mainCategoryId = String(formData.get("mainCategoryId") ?? selectedMainCategoryId);
     const childCategoryId =
@@ -50,11 +59,13 @@ export function ProductForm({
     }
 
     setIsSubmitting(true);
+    const effectiveImageUrls = formData.getAll("imageUrls").map(String).filter(Boolean);
 
     const payload = {
       name: String(formData.get("name") ?? ""),
       price: Number(formData.get("price") ?? 0),
-      imageUrl,
+      imageUrl: effectiveImageUrls[0] ?? "",
+      imageUrls: effectiveImageUrls,
       description: String(formData.get("description") ?? ""),
       status: String(formData.get("status") ?? "draft"),
       isSoldOut: formData.get("isSoldOut") === "on",
@@ -112,7 +123,7 @@ export function ProductForm({
         </div>
       </div>
 
-      <form action={handleSubmit} className="grid gap-6 lg:grid-cols-[1.25fr_0.9fr]">
+      <form onSubmit={handleSubmit} className="grid gap-6 lg:grid-cols-[1.25fr_0.9fr]">
         <Card className="border border-[var(--admin-border)] bg-[var(--admin-card)] p-5 shadow-[0_24px_80px_-42px_rgba(76,57,35,0.16)]">
           <div className="space-y-5">
             <div className="space-y-2">
@@ -276,14 +287,14 @@ export function ProductForm({
             </div>
 
             <div className="rounded-[1.5rem] border border-[var(--admin-border)] bg-[var(--admin-surface-2)] p-4">
-              <ImageUpload value={imageUrl} onChange={setImageUrl} />
+              <ImageUpload values={imageUrls} onChange={setImageUrls} />
             </div>
 
             {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
             <Button
               type="submit"
-              disabled={isSubmitting || !imageUrl || !hasMainCategories}
+              disabled={isSubmitting || imageUrls.length === 0 || !hasMainCategories}
               className="w-full bg-[var(--admin-ink)] text-white hover:bg-[var(--admin-brand-strong)]"
             >
               {isSubmitting ? "儲存中..." : "儲存商品"}

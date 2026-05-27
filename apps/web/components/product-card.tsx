@@ -9,11 +9,13 @@ export function ProductCard({
 }: {
   product: ProductRecord;
 }) {
+  const cardImageUrl = product.imageUrls?.[0] ?? product.imageUrl;
+
   const cardContent = (
     <>
       <div className="relative aspect-[16/10] overflow-hidden bg-[#ddd3c5]">
         <Image
-          src={product.imageUrl}
+          src={cardImageUrl}
           alt={product.name}
           fill
           className={`object-cover transition duration-500 ${

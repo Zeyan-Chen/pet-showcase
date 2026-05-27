@@ -8,6 +8,10 @@ describe("serializeProduct", () => {
       name: "Milo",
       price: 1200,
       imageUrl: "https://example.com/milo.jpg",
+      imageUrls: [
+        "https://example.com/milo-1.jpg",
+        "https://example.com/milo-2.jpg"
+      ],
       description: "Friendly pet",
       status: "published",
       isSoldOut: true,
@@ -35,6 +39,11 @@ describe("serializeProduct", () => {
     expect(result._id).toBe("abc123");
     expect(result.status).toBe("published");
     expect(result.isSoldOut).toBe(true);
+    expect(result.imageUrls).toEqual([
+      "https://example.com/milo-1.jpg",
+      "https://example.com/milo-2.jpg"
+    ]);
+    expect(result.imageUrl).toBe("https://example.com/milo-1.jpg");
     expect(result.category.name).toBe("Leachianus");
     expect(result.mainCategoryId).toBe("cat1");
     expect(result.childCategoryId).toBe("child1");
