@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { CategoryNav } from "../../../components/category-nav";
+import { ProductGalleryCarousel } from "../../../components/product-gallery-carousel";
 import { StorefrontShell } from "../../../components/storefront-shell";
 import { getCategories } from "../../../lib/categories";
 import { getPublishedProductById } from "../../../lib/products";
@@ -34,27 +34,7 @@ export default async function ProductDetailPage({
       <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <div className="grid gap-6 lg:grid-cols-[1.02fr,0.98fr] lg:items-start">
           <section className="space-y-4 rounded-[2rem] border border-[#d8cdbf] bg-white p-4 shadow-[0_26px_56px_rgba(16,38,63,0.14)]">
-            {productImages.length > 0 ? (
-              productImages.map((imageUrl, index) => (
-                <div
-                  key={`${imageUrl}-${index}`}
-                  className="relative overflow-hidden rounded-[1.5rem] border border-[#e6ddd1] bg-[#f8f5ef]"
-                >
-                  <div className="relative aspect-[16/10]">
-                    <Image
-                      src={imageUrl}
-                      alt={`${product.name} 圖片 ${index + 1}`}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="rounded-[1.5rem] border border-dashed border-[#d8cdbf] p-8 text-center text-sm text-[#6d6359]">
-                目前沒有可顯示的商品圖片。
-              </div>
-            )}
+            <ProductGalleryCarousel productName={product.name} images={productImages} />
           </section>
           <section className="rounded-[2rem] border border-[#d8cdbf] bg-white p-6 text-[#1f1a17] shadow-[0_26px_56px_rgba(16,38,63,0.14)] sm:p-8">
             <div className="space-y-5">
@@ -71,17 +51,19 @@ export default async function ProductDetailPage({
                   NT$ {currencyFormatter.format(product.price)}
                 </p>
                 {product.isSoldOut ? (
-                  <p className="text-sm font-medium text-[#6b5143]">目前狀態：已售罄，暫不提供點擊購買。</p>
+                  <p className="text-sm font-medium text-[#6b5143]">
+                    目前狀態：已售罄，歡迎詢問是否可預訂。
+                  </p>
                 ) : null}
               </div>
               <div className="space-y-3">
                 <h2 className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-[#6d6359]">
-                  個體介紹
+                  個體說明
                 </h2>
                 <p className="text-sm leading-7 text-[#4f4943] sm:text-base">{product.description}</p>
               </div>
               <div className="rounded-[1.5rem] border border-[#d8cdbf] bg-white p-4 text-sm leading-7 text-[#625a53]">
-                如需了解更多飼養資訊或想確認個體狀況，可以再透過後續聯繫方式進一步詢問。
+                實際售價與交付方式，請以後台更新的商品資訊與私訊確認內容為準。
               </div>
             </div>
           </section>
