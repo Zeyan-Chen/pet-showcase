@@ -61,11 +61,14 @@ describe("ProductCard", () => {
     );
   });
 
-  it("renders a sold-out badge and disables navigation when sold out", () => {
+  it("renders a sold-out badge and keeps navigation when sold out", () => {
     render(<ProductCard product={{ ...baseProduct, isSoldOut: true }} />);
 
     expect(screen.getByText("售罄")).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /rookie gecko 001/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /rookie gecko 001/i })).toHaveAttribute(
+      "href",
+      "/products/product-1"
+    );
   });
 
   it("prefers the first image in imageUrls", () => {

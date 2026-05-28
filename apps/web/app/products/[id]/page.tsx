@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CategoryNav } from "../../../components/category-nav";
 import { StorefrontShell } from "../../../components/storefront-shell";
@@ -23,7 +22,6 @@ export default async function ProductDetailPage({
   }
 
   const activeSlug = product.childCategory?.slug ?? product.mainCategory.slug;
-  const backLabel = product.childCategory?.name ?? product.mainCategory.name;
   const productImages =
     product.imageUrls && product.imageUrls.length > 0
       ? product.imageUrls
@@ -34,32 +32,6 @@ export default async function ProductDetailPage({
   return (
     <StorefrontShell categoryNav={<CategoryNav categories={categories} activeSlug={activeSlug} />}>
       <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-        <div className="mb-6 rounded-[2rem] border border-[#d8cdbf] bg-white p-5 text-[var(--store-ink)] shadow-[0_24px_56px_rgba(16,38,63,0.16)] sm:p-6">
-          <div className="space-y-3">
-            <Link
-              href={`/?category=${activeSlug}`}
-              className="inline-flex items-center text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[#6d6359] transition hover:text-[#17385d]"
-            >
-              返回 {backLabel}
-            </Link>
-            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[#6d6359]">
-              {product.childCategory
-                ? `${product.mainCategory.name} / ${product.childCategory.name}`
-                : product.mainCategory.name}
-            </p>
-            <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-3xl font-semibold sm:text-4xl">{product.name}</h1>
-              {product.isSoldOut ? (
-                <span className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold tracking-[0.02em] text-[#201d1a] shadow-[0_12px_28px_rgba(0,0,0,0.08)]">
-                  售罄
-                </span>
-              ) : null}
-            </div>
-            <p className="max-w-3xl text-sm leading-7 text-[#5f5851] sm:text-base">
-              這裡整理這隻守宮的基本展示資訊，方便你快速查看品系、價格與個體說明。
-            </p>
-          </div>
-        </div>
         <div className="grid gap-6 lg:grid-cols-[1.02fr,0.98fr] lg:items-start">
           <section className="space-y-4 rounded-[2rem] border border-[#d8cdbf] bg-white p-4 shadow-[0_26px_56px_rgba(16,38,63,0.14)]">
             {productImages.length > 0 ? (

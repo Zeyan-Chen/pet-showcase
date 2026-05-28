@@ -42,14 +42,6 @@ export function ProductCard({
     </>
   );
 
-  if (product.isSoldOut) {
-    return (
-      <article className="overflow-hidden rounded-[1.75rem] border border-[#ddd3c6] bg-white shadow-[0_18px_46px_rgba(16,38,63,0.1)]">
-        {cardContent}
-      </article>
-    );
-  }
-
   return (
     <Link
       href={`/products/${product._id}`}
