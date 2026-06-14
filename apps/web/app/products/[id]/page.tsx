@@ -10,12 +10,15 @@ export const dynamic = "force-dynamic";
 const currencyFormatter = new Intl.NumberFormat("en-US");
 
 export default async function ProductDetailPage({
-  params
+  params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [product, categories] = await Promise.all([getPublishedProductById(id), getCategories()]);
+  const [product, categories] = await Promise.all([
+    getPublishedProductById(id),
+    getCategories(),
+  ]);
 
   if (!product) {
     notFound();
@@ -30,11 +33,18 @@ export default async function ProductDetailPage({
         : [];
 
   return (
-    <StorefrontShell categoryNav={<CategoryNav categories={categories} activeSlug={activeSlug} />}>
+    <StorefrontShell
+      categoryNav={
+        <CategoryNav categories={categories} activeSlug={activeSlug} />
+      }
+    >
       <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <div className="grid gap-6 lg:grid-cols-[1.02fr,0.98fr] lg:items-start">
           <section className="space-y-4 rounded-[2rem] border border-[#d8cdbf] bg-white p-4 shadow-[0_26px_56px_rgba(16,38,63,0.14)]">
-            <ProductGalleryCarousel productName={product.name} images={productImages} />
+            <ProductGalleryCarousel
+              productName={product.name}
+              images={productImages}
+            />
           </section>
           <section className="rounded-[2rem] border border-[#d8cdbf] bg-white p-6 text-[#1f1a17] shadow-[0_26px_56px_rgba(16,38,63,0.14)] sm:p-8">
             <div className="space-y-5">
@@ -58,12 +68,11 @@ export default async function ProductDetailPage({
               </div>
               <div className="space-y-3">
                 <h2 className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-[#6d6359]">
-                  個體說明
+                  說明
                 </h2>
-                <p className="text-sm leading-7 text-[#4f4943] sm:text-base">{product.description}</p>
-              </div>
-              <div className="rounded-[1.5rem] border border-[#d8cdbf] bg-white p-4 text-sm leading-7 text-[#625a53]">
-                實際售價與交付方式，請以後台更新的商品資訊與私訊確認內容為準。
+                <p className="text-sm leading-7 text-[#4f4943] sm:text-base">
+                  {product.description}
+                </p>
               </div>
             </div>
           </section>

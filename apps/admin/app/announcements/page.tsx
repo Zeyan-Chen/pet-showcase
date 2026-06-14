@@ -14,7 +14,9 @@ export default async function AnnouncementsPage() {
           <p className="text-sm font-medium uppercase tracking-[0.24em] text-[var(--admin-muted)]">
             站台公告
           </p>
-          <h1 className="text-3xl font-bold text-[var(--admin-ink)]">公告管理</h1>
+          <h1 className="text-3xl font-bold text-[var(--admin-ink)]">
+            公告管理
+          </h1>
           <p className="max-w-3xl text-sm leading-6 text-[var(--admin-muted)]">
             設定前台上方藍色細條要輪播的公告。你可以新增多則公告，並個別控制是否啟用。
           </p>

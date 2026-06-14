@@ -24,6 +24,7 @@ export function CategoryNav({ categories, activeSlug }: CategoryNavProps) {
   const desktopShellRef = useRef<HTMLDivElement | null>(null);
   const desktopNavRef = useRef<HTMLElement | null>(null);
   const desktopItemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const desktopCloseTimeoutRef = useRef<number | null>(null);
   const [isPending, startTransition] = useTransition();
   const [pendingHref, setPendingHref] = useState<string | null>(null);
   const [openDesktopSlug, setOpenDesktopSlug] = useState<string | null>(null);
@@ -74,6 +75,14 @@ export function CategoryNav({ categories, activeSlug }: CategoryNavProps) {
     };
   }, [categories, activeSlug]);
 
+  useEffect(() => {
+    return () => {
+      if (desktopCloseTimeoutRef.current) {
+        window.clearTimeout(desktopCloseTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const openDesktopCategory = useMemo(
     () => categories.find((category) => category.slug === openDesktopSlug && category.children.length > 0) ?? null,
     [categories, openDesktopSlug]
@@ -113,6 +122,23 @@ export function CategoryNav({ categories, activeSlug }: CategoryNavProps) {
     });
   }
 
+  function cancelDesktopClose() {
+    if (!desktopCloseTimeoutRef.current) {
+      return;
+    }
+
+    window.clearTimeout(desktopCloseTimeoutRef.current);
+    desktopCloseTimeoutRef.current = null;
+  }
+
+  function scheduleDesktopClose() {
+    cancelDesktopClose();
+    desktopCloseTimeoutRef.current = window.setTimeout(() => {
+      setOpenDesktopSlug(null);
+      desktopCloseTimeoutRef.current = null;
+    }, 160);
+  }
+
   function handleDesktopParentClick(category: CategoryTreeRecord) {
     if (category.children.length === 0) {
       handleNavigate(buildCategoryHref(category.slug));
@@ -128,6 +154,8 @@ export function CategoryNav({ categories, activeSlug }: CategoryNavProps) {
   }
 
   function openDesktopDropdown(category: CategoryTreeRecord) {
+    cancelDesktopClose();
+
     if (category.children.length === 0) {
       setOpenDesktopSlug(null);
       return;
@@ -156,7 +184,7 @@ export function CategoryNav({ categories, activeSlug }: CategoryNavProps) {
 
   return (
     <div className={`store-nav-wrap ${isPending ? "store-nav-wrap-pending" : ""}`} aria-busy={isPending}>
-      <div className="store-nav-desktop" onMouseLeave={() => setOpenDesktopSlug(null)}>
+      <div className="store-nav-desktop" onMouseEnter={cancelDesktopClose} onMouseLeave={scheduleDesktopClose}>
         <div className="store-nav-desktop-shell" ref={desktopShellRef}>
           {canScrollDesktopLeft ? (
             <button
@@ -233,6 +261,8 @@ export function CategoryNav({ categories, activeSlug }: CategoryNavProps) {
             <div
               className="store-nav-dropdown store-nav-dropdown-floating"
               style={desktopDropdownLeft == null ? undefined : { left: `${desktopDropdownLeft}px` }}
+              onMouseEnter={cancelDesktopClose}
+              onMouseLeave={scheduleDesktopClose}
             >
               <button
                 type="button"
